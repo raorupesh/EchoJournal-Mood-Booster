@@ -1,0 +1,290 @@
+{
+	"info": {
+		"_postman_id": "f3052f5d-f351-4717-98c9-382883ab5aa0",
+		"name": "EchoJournal",
+		"description": "API collection for testing Journal and Emotion entries",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19201630"
+	},
+	"item": [
+		{
+			"name": "Journal Entries",
+			"item": [
+				{
+					"name": "Create Journal Entry",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response\r",
+									"const jsonResponse = pm.response.json();\r",
+									"\r",
+									"// Extract the _id\r",
+									"const JournalId = jsonResponse.data._id;\r",
+									"\r",
+									"// Store the _id in an environment variable\r",
+									"pm.environment.set(\"JournalId\", JournalId);\r",
+									"\r",
+									"// Log the _id to the console for verification\r",
+									"console.log(\"Stored JournalId:\", JournalId);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"nandan\",\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"moodScore\": 8,\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-04T12:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/journal/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"journal",
+								""
+							]
+						},
+						"description": "Create a new journal entry"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recent Journal Entries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/journal/recent/nandan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"journal",
+								"recent",
+								"nandan"
+							]
+						},
+						"description": "Get recent journal entries for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Journal Entries (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/journal/all/nandan?page=1&limit=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"journal",
+								"all",
+								"nandan"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get all journal entries for a user with pagination"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Journal Entry",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Updated journal entry content. Today was even more productive than I initially thought!\",\n    \"moodScore\": 9,\n    \"feelings\": [\"productive\", \"satisfied\", \"energetic\"]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/journal/{{JournalId}}/nandan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"journal",
+								"{{JournalId}}",
+								"nandan"
+							]
+						},
+						"description": "Update an existing journal entry"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Journal Entry",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/journal/{{JournalId}}/nandan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"journal",
+								"{{JournalId}}",
+								"nandan"
+							]
+						},
+						"description": "Delete a journal entry"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing journal entries"
+		},
+		{
+			"name": "Emotion Entries",
+			"item": [
+				{
+					"name": "Create Emotion Entry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"nandan\",\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/emotion/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"emotion",
+								""
+							]
+						},
+						"description": "Create a new emotion entry"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Monthly Emotions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/emotion/monthly/nandan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"emotion",
+								"monthly",
+								"nandan"
+							]
+						},
+						"description": "Get monthly emotion data for a user"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing emotion entries"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-extract journal entry ID from create response",
+					"if (pm.response.code === 201 && pm.request.url.toString().includes('/app/journal/')) {",
+					"    const responseData = pm.response.json();",
+					"    if (responseData.success && responseData.data && responseData.data._id) {",
+					"        pm.collectionVariables.set('journalEntryId', responseData.data._id);",
+					"        console.log('Saved journal entry ID: ' + responseData.data._id);",
+					"    }",
+					"}",
+					"",
+					"// Auto-extract emotion entry ID from create response",
+					"if (pm.response.code === 201 && pm.request.url.toString().includes('/app/emotion/')) {",
+					"    const responseData = pm.response.json();",
+					"    if (responseData.success && responseData.data && responseData.data._id) {",
+					"        pm.collectionVariables.set('emotionEntryId', responseData.data._id);",
+					"        console.log('Saved emotion entry ID: ' + responseData.data._id);",
+					"    }",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "journalEntryId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "emotionEntryId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -8,16 +8,13 @@ class App {
   public expressApp: express.Application;
   public JournalEntries: JournalEntryModel;
   public EmotionEntries: EmotionEntryModel;
-
   constructor(mongoDBConnection: string) {
     this.expressApp = express();
     this.middleware();
     this.routes();
     this.JournalEntries = new JournalEntryModel(mongoDBConnection);
     this.EmotionEntries = new EmotionEntryModel(mongoDBConnection);
-  }
-
-  private middleware(): void {
+  }private middleware(): void {
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     this.expressApp.use((req, res, next) => {
@@ -33,7 +30,7 @@ class App {
     router.post('/app/journal/', async (req, res) => {
       try {
         const entry = await this.JournalEntries.createJournalEntry({
-          userId: req.body.userId || 'user123',
+          userId: req.body.userId || 'nandan',
           content: req.body.content,
           moodScore: req.body.moodScore,
           feelings: req.body.feelings,
@@ -106,7 +103,7 @@ class App {
     router.post('/app/emotion/', async (req, res) => {
       try {
         const entry = await this.EmotionEntries.createEmotionEntry({
-          userId: req.body.userId || 'user123',
+          userId: req.body.userId || 'nandan',
           moodScore: req.body.moodScore,
           feelings: req.body.feelings,
           date: req.body.date ? new Date(req.body.date) : undefined
@@ -116,9 +113,7 @@ class App {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error creating emotion entry' });
       }
-    });
-
-    router.get('/app/emotion/monthly/:userId', async (req, res) => {
+    });    router.get('/app/emotion/monthly/:userId', async (req, res) => {
       try {
         const data = await this.EmotionEntries.getMonthlyEmotions(req.params.userId);
         res.status(200).json({ success: true, data });
@@ -127,7 +122,20 @@ class App {
         res.status(500).json({ success: false, message: 'Error fetching monthly emotion data' });
       }
     });
-
+    
+    router.get('/app/emotion/all/:userId', async (req, res) => {
+      try {
+        const data = await this.EmotionEntries.getAllEmotionEntries(req.params.userId);
+        res.status(200).json({ success: true, data });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
+      }
+    });// Add route for root path to serve index.html
+    router.get('/', (req, res) => {
+      res.sendFile('index.html', { root: __dirname + '/pages' });
+    });
+    
     this.expressApp.use('/', router);
 
     this.expressApp.use('/app/json/', express.static(__dirname + '/app/json'));

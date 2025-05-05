@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import { IJournalEntryModel } from "../interfaces/IJournalEntryModel";
+import { IEmotionEntryModel } from "../interfaces/IEmotionEntryModel";
 
 class EmotionEntryModel {
     public schema: any;
@@ -22,48 +22,90 @@ class EmotionEntryModel {
             },
             { collection: "emotionentries" }
         );
-    }
-
-    public async createModel() {
+    }    public createModel() {
         try {
-            await Mongoose.connect(this.dbConnectionString, { useNewUrlParser: true, useUnifiedTopology: true });
-            this.model = Mongoose.model<IJournalEntryModel>("EmotionEntry", this.schema);
+            // Don't create a new connection here - we'll rely on the connection from JournalEntryModel
+            this.model = Mongoose.model<IEmotionEntryModel>("EmotionEntry", this.schema);
         } catch (e) {
-            console.error(e);
+            // If model already exists, just retrieve it
+            this.model = Mongoose.model<IEmotionEntryModel>("EmotionEntry");
         }
-    }
-
-    // Log a new emotion entry
+    }    // Log a new emotion entry
     public async createEmotionEntry(data: {
         userId: string;
         moodScore: number;
         feelings: string[];
         date?: Date;
     }) {
-        const entry = new this.model({
-            userId: data.userId,
-            moodScore: data.moodScore,
-            feelings: data.feelings,
-            date: data.date || new Date()
-        });
-        return await entry.save();
+        try {
+            // Validate input
+            if (!data.userId) {
+                throw new Error("userId is required");
+            }
+            
+            if (typeof data.moodScore !== 'number' || data.moodScore < 1 || data.moodScore > 10) {
+                throw new Error("moodScore must be a number between 1 and 10");
+            }
+            
+            if (!Array.isArray(data.feelings) || data.feelings.length === 0) {
+                throw new Error("feelings must be a non-empty array of strings");
+            }
+            
+            const entry = new this.model({
+                userId: data.userId,
+                moodScore: data.moodScore,
+                feelings: data.feelings,
+                date: data.date || new Date()
+            });
+            
+            const savedEntry = await entry.save();
+            return savedEntry;
+        } catch (e) {
+            console.error("Error creating emotion entry:", e);
+            throw e;
+        }
+    }    // Get monthly emotion data (with flexible date range for testing)
+    public async getMonthlyEmotions(userId: string) {
+        try {
+            // for now, we will just get the last 1 month of data
+            const endDate = new Date();
+            const startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 1, 1); // Start of the month 1 month ago
+
+            
+            const entries = await this.model.find({
+                userId: userId,
+                date: { $gte: startDate, $lte: endDate }
+            }).sort({ date: 1 }).exec();
+            
+            return entries.map((entry: IEmotionEntryModel) => ({
+                id: entry._id,
+                date: entry.date,
+                moodScore: entry.moodScore,
+                feelings: entry.feelings
+            }));
+        } catch (e) {
+            console.error("Error fetching monthly emotions:", e);
+            return [];
+        }
     }
 
-    // Get monthly emotion data (last 30 days)
-    public async getMonthlyEmotions(userId: string) {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    // Get all emotion entries for a user
+    public async getAllEmotionEntries(userId: string) {
+        try {
+            const entries = await this.model.find({
+                userId: userId
+            }).sort({ date: -1 }).exec();
 
-        const entries = await this.model.find({
-            userId: userId,
-            date: { $gte: thirtyDaysAgo }
-        }).sort({ date: 1 }).exec();
-
-        return entries.map((entry: IJournalEntryModel) => ({
-            date: entry.date,
-            moodScore: entry.moodScore,
-            feelings: entry.feelings
-        }));
+            return entries.map((entry: IEmotionEntryModel) => ({
+                id: entry._id,
+                date: entry.date,
+                moodScore: entry.moodScore,
+                feelings: entry.feelings
+            }));
+        } catch (e) {
+            console.error("Error fetching all emotion entries:", e);
+            return [];
+        }
     }
 }
 

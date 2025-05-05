@@ -1,5 +1,5 @@
 // Switch to your sample DB
-db = db.getSiblingDB('journalSample')
+db = db.getSiblingDB('echoJournalSample')
 
 // Create and clear the journalentries collection
 db.createCollection('journalentries')
@@ -29,6 +29,22 @@ journalCollection.insert({
     content: "Felt a bit stressed about upcoming deadlines, but managed to meditate.",
     feelings: ["stressed", "calm"],
     moodScore: 6
+})
+
+journalCollection.insert({
+    userId: "nandan",
+    date: new Date("2025-05-04T21:00:00Z"),
+    content: "Spent the day with family. We had a barbecue and played board games.",
+    feelings: ["happy", "content"],
+    moodScore: 9
+})
+
+journalCollection.insert({
+    userId: "nandan",
+    date: new Date("2025-05-05T22:45:00Z"),
+    content: "Monday was challenging. Project deadline moved up, feeling a bit overwhelmed.",
+    feelings: ["anxious", "determined"],
+    moodScore: 4
 })
 
 journalCollection.insert({

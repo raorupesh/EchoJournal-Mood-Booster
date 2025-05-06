@@ -24,7 +24,9 @@ class App {
     });
   }
   private routes(): void {
-    let router = express.Router();    // Journal Entry routes
+    let router = express.Router();    
+    
+    // Journal Entry routes
     router.post('/app/journal/', async (req, res) => {
       try {
         const entry = await this.JournalEntries.createJournalEntry({
@@ -59,6 +61,19 @@ class App {
       } catch (e) {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error fetching all journal entries' });
+      }
+    });
+
+    router.get('/app/journal/:id/:userId', async (req, res) => {
+      try {
+        const entry = await this.JournalEntries.getJournalEntry(req.params.id, parseInt(req.params.userId));
+        if (!entry) {
+          return res.status(404).json({ success: false, message: 'Journal entry not found' });
+        }
+        res.status(200).json({ success: true, data: entry });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ success: false, message: 'Error fetching journal entry' });
       }
     });
 

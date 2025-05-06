@@ -314,7 +314,7 @@ function populateJournalEntries(elementId, entries) {
 			
 			newElement += "<div class=\"panel panel-default\">";
 			newElement += "<div class=\"panel-heading\">";
-			newElement += "<h4>" + date + "</h4>";
+			newElement += "<h4><a href=\"javascript:void(0)\" onclick=\"showJournalEntryModal('" + entry._id + "')\">" + date + "</a></h4>";
 			newElement += "</div>";
 			newElement += "<div class=\"panel-body\">";
 			newElement += "<p>" + entry.content + "</p>";
@@ -783,4 +783,68 @@ function checkApiAvailability() {
 	// Try to fetch emotions API - just to check if server is responding
 	xhr.open('GET', '/app/emotion/monthly/' + userId, true);
 	xhr.send();
+}
+
+/**
+ * Shows a modal with full journal entry details
+ * Uses the GET /app/journal/:id/:userId API endpoint to fetch entry details
+ * @param {string} entryId - The ID of the journal entry to display
+ */
+function showJournalEntryModal(entryId) {
+	var userId = 1; // TODO: In production, get userId from cookies or session storage
+	var xmlhttp = new XMLHttpRequest();
+	
+	// Show loading indicator in the modal
+	document.getElementById('journalEntryModalBody').innerHTML = 
+		"<div class='text-center'><p><em>Loading entry details...</em></p></div>";
+	$('#journalEntryModal').modal('show');
+	
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState == 4) {
+			if (xmlhttp.status == 200) {
+				var response = JSON.parse(xmlhttp.responseText);
+				if (response.success && response.data) {
+					var entry = response.data;
+					
+					// Format the date nicely
+					var entryDate = new Date(entry.date).toLocaleString();
+					
+					// Create modal content
+					var html = "<h4>" + entryDate + "</h4>";
+					
+					// Show feelings tags
+					html += "<p><strong>Feelings:</strong> " + 
+					   (entry.feelings && entry.feelings.length ? entry.feelings.join(", ") : "None specified") + 
+					   "</p>";
+					
+					// Show people if available
+					if (entry.people && entry.people.length) {
+						html += "<p><strong>People:</strong> " + entry.people.join(", ") + "</p>";
+					}
+					
+					// Show places if available
+					if (entry.place && entry.place.length) {
+						html += "<p><strong>Places:</strong> " + entry.place.join(", ") + "</p>";
+					}
+					
+					// Show full content with proper formatting
+					html += "<hr><div class='well'>" + entry.content + "</div>";
+					
+					// Update modal title and content
+					document.getElementById('journalEntryModalLabel').innerText = "Journal Entry - " + entryDate;
+					document.getElementById('journalEntryModalBody').innerHTML = html;
+				} else {
+					document.getElementById('journalEntryModalBody').innerHTML = 
+						"<div class='alert alert-warning'>Entry not found or could not be loaded.</div>";
+				}
+			} else {
+				document.getElementById('journalEntryModalBody').innerHTML = 
+					"<div class='alert alert-danger'>Error loading entry. Please try again later.</div>";
+			}
+		}
+	};
+	
+	// Make the API request to get full journal entry details
+	xmlhttp.open("GET", "/app/journal/" + entryId + "/" + userId, true);
+	xmlhttp.send();
 }

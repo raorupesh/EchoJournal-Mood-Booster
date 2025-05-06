@@ -52,6 +52,11 @@ class JournalEntryModel {
         return await entry.save();
     }
 
+    public async getJournalEntry(id: number, userId: number) {
+        return await this.model.findOne({ _id: id, userId }).exec();
+    }
+
+
     public async getRecentJournalEntries(userId: number, limit: number = 3) {
         return await this.model.find({ userId })
             .sort({ date: -1 })
@@ -70,7 +75,7 @@ class JournalEntryModel {
         return { total, entries };
     }
 
-    public async updateJournalEntry(id: number, userId: number, update: {
+    public async updateJournalEntry(id: string, userId: number, update: {
         content?: string;
         feelings?: string[];
     }) {

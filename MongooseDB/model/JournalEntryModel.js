@@ -51,6 +51,11 @@ class JournalEntryModel {
             return yield entry.save();
         });
     }
+    getJournalEntry(id, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.model.findOne({ _id: id, userId }).exec();
+        });
+    }
     getRecentJournalEntries(userId, limit = 3) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.model.find({ userId })

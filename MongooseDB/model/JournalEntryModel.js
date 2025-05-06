@@ -19,11 +19,12 @@ class JournalEntryModel {
     }
     createSchema() {
         this.schema = new Mongoose.Schema({
-            userId: { type: String, required: true },
+            userId: { type: Number, required: true },
             date: { type: Date, required: true },
             content: { type: String, required: true },
             feelings: { type: [String], required: true },
-            moodScore: { type: Number, required: true }
+            createdAt: { type: Date, default: Date.now },
+            updatedAt: { type: Date, default: Date.now }
         }, { collection: "journalentries" });
     }
     createModel() {
@@ -42,9 +43,10 @@ class JournalEntryModel {
             const entry = new this.model({
                 userId: data.userId,
                 content: data.content,
-                moodScore: data.moodScore,
                 feelings: data.feelings,
-                date: data.date || new Date()
+                date: data.date || new Date(),
+                createdAt: new Date(),
+                updatedAt: new Date()
             });
             return yield entry.save();
         });
@@ -75,7 +77,9 @@ class JournalEntryModel {
             if (!entry) {
                 return null;
             }
-            const updatedEntry = yield this.model.findByIdAndUpdate(id, Object.assign({}, update), { new: true, runValidators: true });
+            // Add updatedAt timestamp to the update
+            const updatedData = Object.assign(Object.assign({}, update), { updatedAt: new Date() });
+            const updatedEntry = yield this.model.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
             return updatedEntry;
         });
     }

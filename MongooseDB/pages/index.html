@@ -161,13 +161,9 @@
 						<div class="form-group">
 							<label for="journalContent">What's on your mind today?</label>
 							<textarea class="form-control" id="journalContent" rows="5" required></textarea>
-						</div>
-						<div class="form-group">
+						</div>					<div class="form-group">
 							<label for="journalFeelings">How are you feeling? (comma-separated)</label>
 							<input type="text" class="form-control" id="journalFeelings" placeholder="happy, excited, motivated" required>
-						</div>						<div class="form-group">
-							<label for="journalMoodScore">Mood Score (1-10)</label>
-							<input type="number" class="form-control" id="journalMoodScore" min="1" max="10" required>
 						</div>
 						<button type="button" class="btn btn-primary" onclick="createJournalEntry()">Save Entry</button>
 						<a href="javascript:initXHR('dashboard', null)" class="btn btn-default">Back to Dashboard</a>
@@ -182,10 +178,17 @@
 					<h3>Track Your Emotions</h3>
 				</div>
 				<div class="panel-body">
-					<form id="emotionForm">
-						<div class="form-group">
+					<form id="emotionForm">						<div class="form-group">
 							<label for="emotionFeelings">What emotions are you experiencing? (comma-separated)</label>
 							<input type="text" class="form-control" id="emotionFeelings" placeholder="calm, focused, relaxed" required>
+						</div>
+						<div class="form-group">
+							<label for="emotionPeople">People you were with (comma-separated)</label>
+							<input type="text" class="form-control" id="emotionPeople" placeholder="mom, dad, friend" required>
+						</div>
+						<div class="form-group">
+							<label for="emotionPlace">Places you visited (comma-separated)</label>
+							<input type="text" class="form-control" id="emotionPlace" placeholder="home, office, park" required>
 						</div>						<div class="form-group">
 							<label for="emotionMoodScore">Current Mood Score (1-10)</label>
 							<input type="number" class="form-control" id="emotionMoodScore" min="1" max="10" required>

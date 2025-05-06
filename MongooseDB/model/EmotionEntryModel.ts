@@ -15,14 +15,19 @@ class EmotionEntryModel {
     public createSchema() {
         this.schema = new Mongoose.Schema(
             {
-                userId: { type: String, required: true },
+                userId: { type: Number, required: true },
                 date: { type: Date, required: true },
+                moodScore: { type: Number, required: true },
                 feelings: { type: [String], required: true },
-                moodScore: { type: Number, required: true }
+                people: { type: [String], required: true },
+                place: { type: [String], required: true },
+                createdAt: { type: Date, default: Date.now }
             },
             { collection: "emotionentries" }
         );
-    }    public createModel() {
+    }
+
+    public createModel() {
         try {
             // Don't create a new connection here - we'll rely on the connection from JournalEntryModel
             this.model = Mongoose.model<IEmotionEntryModel>("EmotionEntry", this.schema);
@@ -30,16 +35,20 @@ class EmotionEntryModel {
             // If model already exists, just retrieve it
             this.model = Mongoose.model<IEmotionEntryModel>("EmotionEntry");
         }
-    }    // Log a new emotion entry
+    }
+
+    // Log a new emotion entry
     public async createEmotionEntry(data: {
-        userId: string;
+        userId: number;
         moodScore: number;
         feelings: string[];
+        people: string[];
+        place: string[];
         date?: Date;
     }) {
         try {
             // Validate input
-            if (!data.userId) {
+            if (data.userId === undefined || data.userId === null) {
                 throw new Error("userId is required");
             }
             
@@ -51,11 +60,22 @@ class EmotionEntryModel {
                 throw new Error("feelings must be a non-empty array of strings");
             }
             
+            if (!Array.isArray(data.people)) {
+                throw new Error("people must be an array of strings");
+            }
+            
+            if (!Array.isArray(data.place)) {
+                throw new Error("place must be an array of strings");
+            }
+            
             const entry = new this.model({
                 userId: data.userId,
                 moodScore: data.moodScore,
                 feelings: data.feelings,
-                date: data.date || new Date()
+                people: data.people || [],
+                place: data.place || [],
+                date: data.date || new Date(),
+                createdAt: new Date()
             });
             
             const savedEntry = await entry.save();
@@ -64,8 +84,10 @@ class EmotionEntryModel {
             console.error("Error creating emotion entry:", e);
             throw e;
         }
-    }    // Get monthly emotion data (with flexible date range for testing)
-    public async getMonthlyEmotions(userId: string) {
+    }
+
+    // Get monthly emotion data (with flexible date range for testing)
+    public async getMonthlyEmotions(userId: number) {
         try {
             // for now, we will just get the last 1 month of data
             const endDate = new Date();
@@ -81,7 +103,9 @@ class EmotionEntryModel {
                 id: entry._id,
                 date: entry.date,
                 moodScore: entry.moodScore,
-                feelings: entry.feelings
+                feelings: entry.feelings,
+                people: entry.people,
+                place: entry.place
             }));
         } catch (e) {
             console.error("Error fetching monthly emotions:", e);
@@ -90,7 +114,7 @@ class EmotionEntryModel {
     }
 
     // Get all emotion entries for a user
-    public async getAllEmotionEntries(userId: string) {
+    public async getAllEmotionEntries(userId: number) {
         try {
             const entries = await this.model.find({
                 userId: userId
@@ -100,7 +124,9 @@ class EmotionEntryModel {
                 id: entry._id,
                 date: entry.date,
                 moodScore: entry.moodScore,
-                feelings: entry.feelings
+                feelings: entry.feelings,
+                people: entry.people,
+                place: entry.place
             }));
         } catch (e) {
             console.error("Error fetching all emotion entries:", e);

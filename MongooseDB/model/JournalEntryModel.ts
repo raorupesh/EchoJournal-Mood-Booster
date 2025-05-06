@@ -15,11 +15,12 @@ class JournalEntryModel {
     public createSchema() {
         this.schema = new Mongoose.Schema(
             {
-                userId: { type: String, required: true },
+                userId: { type: Number, required: true },
                 date: { type: Date, required: true },
                 content: { type: String, required: true },
                 feelings: { type: [String], required: true },
-                moodScore: { type: Number, required: true }
+                createdAt: { type: Date, default: Date.now },
+                updatedAt: { type: Date, default: Date.now }
             },
             { collection: "journalentries" }
         );
@@ -35,30 +36,30 @@ class JournalEntryModel {
     }
 
     public async createJournalEntry(data: {
-        userId: string;
+        userId: number;
         content: string;
-        moodScore: number;
         feelings: string[];
         date?: Date;
     }) {
         const entry = new this.model({
             userId: data.userId,
             content: data.content,
-            moodScore: data.moodScore,
             feelings: data.feelings,
-            date: data.date || new Date()
+            date: data.date || new Date(),
+            createdAt: new Date(),
+            updatedAt: new Date()
         });
         return await entry.save();
     }
 
-    public async getRecentJournalEntries(userId: string, limit: number = 3) {
+    public async getRecentJournalEntries(userId: number, limit: number = 3) {
         return await this.model.find({ userId })
             .sort({ date: -1 })
             .limit(limit)
             .exec();
     }
 
-    public async getAllJournalEntries(userId: string, page: number = 1, limit: number = 10) {
+    public async getAllJournalEntries(userId: number, page: number = 1, limit: number = 10) {
         const skip = (page - 1) * limit;
         const total = await this.model.countDocuments({ userId });
         const entries = await this.model.find({ userId })
@@ -69,24 +70,30 @@ class JournalEntryModel {
         return { total, entries };
     }
 
-    public async updateJournalEntry(id: string, userId: string, update: {
+    public async updateJournalEntry(id: number, userId: number, update: {
         content?: string;
-        moodScore?: number;
         feelings?: string[];
     }) {
         const entry = await this.model.findOne({ _id: id, userId });
         if (!entry) {
             return null;
         }
+        
+        // Add updatedAt timestamp to the update
+        const updatedData = { 
+            ...update,
+            updatedAt: new Date() 
+        };
+        
         const updatedEntry = await this.model.findByIdAndUpdate(
             id,
-            { ...update },
+            updatedData,
             { new: true, runValidators: true }
         );
         return updatedEntry;
     }
 
-    public async deleteJournalEntry(id: string, userId: string) {
+    public async deleteJournalEntry(id: number, userId: number) {
         const entry = await this.model.findOne({ _id: id, userId });
         if (!entry) {
             return null;

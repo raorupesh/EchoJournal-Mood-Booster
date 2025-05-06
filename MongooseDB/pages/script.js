@@ -90,7 +90,7 @@ function initXHR(x, value) {
  */
 function retrieveJournalEntriesFromServer() {
 	// TODO: In production, get userId from cookies or session storage
-	var userId = 'nandan'; // Default user ID for development
+	var userId = 1; // Default user ID for development
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4) {
@@ -135,7 +135,7 @@ function retrieveJournalEntriesFromServer() {
  */
 function retrieveEmotionEntriesFromServer() {
 	// TODO: In production, get userId from cookies or session storage
-	var userId = 'nandan'; // Default user ID for development
+	var userId = 1; // Default user ID for development
 	var xmlhttp = new XMLHttpRequest();
 
 	xmlhttp.onreadystatechange = function() {
@@ -159,9 +159,10 @@ function retrieveEmotionEntriesFromServer() {
 function createJournalEntry() {
 	var content = document.getElementById('journalContent').value;
 	var feelings = document.getElementById('journalFeelings').value.split(',').map(item => item.trim());
-	var moodScore = parseInt(document.getElementById('journalMoodScore').value);
+	var people = document.getElementById('journalPeople').value.split(',').map(item => item.trim());
+	var place = document.getElementById('journalPlace').value.split(',').map(item => item.trim());
 
-	if (!content || !feelings.length || isNaN(moodScore) || moodScore < 1 || moodScore > 10) {
+	if (!content || !feelings.length || !people.length || !place.length) {
 		alert('Please fill out all fields correctly.');
 		return;
 	}
@@ -169,11 +170,11 @@ function createJournalEntry() {
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4) {
-			if (xmlhttp.status == 201) {
-				alert('Journal entry saved successfully!');
+			if (xmlhttp.status == 201) {				alert('Journal entry saved successfully!');
 				document.getElementById('journalContent').value = '';
 				document.getElementById('journalFeelings').value = '';
-				document.getElementById('journalMoodScore').value = '';
+				document.getElementById('journalPeople').value = '';
+				document.getElementById('journalPlace').value = '';
 				// Go back to dashboard
 				initXHR('dashboard', null);
 			} else {
@@ -187,15 +188,18 @@ function createJournalEntry() {
 				} catch (e) {
 					console.error("Could not parse error response", e);
 				}
-			}
+		}
 		}
 	}
+	
 	xmlhttp.open("POST", '/app/journal/', true);
-	xmlhttp.setRequestHeader('Content-Type', 'application/json');	xmlhttp.send(JSON.stringify({
-		userId: 'nandan',  // TODO: In production, get userId from cookies or session storage
+	xmlhttp.setRequestHeader('Content-Type', 'application/json');
+	xmlhttp.send(JSON.stringify({
+		userId: 1,  // TODO: In production, get userId from cookies or session storage
 		content: content,
 		feelings: feelings,
-		moodScore: moodScore,
+		people: people,
+		place: place,
 		date: new Date()
 	}));
 }
@@ -207,11 +211,22 @@ function createJournalEntry() {
 function createEmotionEntry() {
 	var feelingsInput = document.getElementById('emotionFeelings').value;
 	var moodScoreInput = document.getElementById('emotionMoodScore').value;
+	var peopleInput = document.getElementById('emotionPeople') ? document.getElementById('emotionPeople').value : '';
+	var placeInput = document.getElementById('emotionPlace') ? document.getElementById('emotionPlace').value : '';
 	
 	// Validate feelings input - remove empty items after splitting/trimming
 	var feelings = feelingsInput.split(',')
 		.map(item => item.trim())
 		.filter(item => item.length > 0);
+	
+	// Process people and place inputs
+	var people = peopleInput ? peopleInput.split(',')
+		.map(item => item.trim())
+		.filter(item => item.length > 0) : [];
+	
+	var place = placeInput ? placeInput.split(',')
+		.map(item => item.trim())
+		.filter(item => item.length > 0) : [];
 	
 	// Validate mood score is a number between 1-10
 	var moodScore = parseInt(moodScoreInput);
@@ -229,8 +244,10 @@ function createEmotionEntry() {
 
 	// Create the emotion entry data object
 	var emotionData = {
-		userId: 'nandan',  // TODO: In production, get userId from cookies or session storage
+		userId: 1,  // TODO: In production, get userId from cookies or session storage
 		feelings: feelings,
+		people: people,
+		place: place,
 		moodScore: moodScore,
 		date: new Date()
 	};
@@ -244,9 +261,16 @@ function createEmotionEntry() {
 				console.log('Emotion tracked successfully!');
 				alert('Emotion tracked successfully!');
 				
-				// Clear the form inputs
-				document.getElementById('emotionFeelings').value = '';
+				// Clear the form inputs				document.getElementById('emotionFeelings').value = '';
 				document.getElementById('emotionMoodScore').value = '';
+				
+				// Clear people and place inputs if they exist
+				if (document.getElementById('emotionPeople')) {
+					document.getElementById('emotionPeople').value = '';
+				}
+				if (document.getElementById('emotionPlace')) {
+					document.getElementById('emotionPlace').value = '';
+				}
 				
 				// Go back to dashboard to show updated graph
 				initXHR('dashboard', null);
@@ -290,7 +314,7 @@ function populateJournalEntries(elementId, entries) {
 			
 			newElement += "<div class=\"panel panel-default\">";
 			newElement += "<div class=\"panel-heading\">";
-			newElement += "<h4>" + date + " <span class=\"badge\">" + entry.moodScore + "/10</span></h4>";
+			newElement += "<h4>" + date + "</h4>";
 			newElement += "</div>";
 			newElement += "<div class=\"panel-body\">";
 			newElement += "<p>" + entry.content + "</p>";
@@ -331,6 +355,8 @@ function populateEmotionEntries(elementId, entries) {
 		newElement += "<tr>";
 		newElement += "<th>Date</th>";
 		newElement += "<th>Feelings</th>";
+		newElement += "<th>People</th>";
+		newElement += "<th>Places</th>";
 		newElement += "<th>Mood Score</th>";
 		newElement += "</tr>";
 		newElement += "</thead>";
@@ -354,15 +380,26 @@ function populateEmotionEntries(elementId, entries) {
 			} catch (e) {
 				console.error("Error formatting date:", e);
 			}
-			
-			// Format feelings array, handle edge cases
+					// Format feelings array, handle edge cases
 			var feelingsStr = Array.isArray(entry.feelings) ? 
 				entry.feelings.join(", ") : 
 				(entry.feelings || "");
+				
+			// Format people array, handle edge cases
+			var peopleStr = Array.isArray(entry.people) ? 
+				entry.people.join(", ") : 
+				(entry.people || "");
+				
+			// Format place array, handle edge cases
+			var placeStr = Array.isArray(entry.place) ? 
+				entry.place.join(", ") : 
+				(entry.place || "");
 			
 			newElement += "<tr>";
 			newElement += "<td>" + dateStr + "</td>";
 			newElement += "<td>" + feelingsStr + "</td>";
+			newElement += "<td>" + peopleStr + "</td>";
+			newElement += "<td>" + placeStr + "</td>";
 			newElement += "<td>" + entry.moodScore + "/10</td>";
 			newElement += "</tr>";
 		}
@@ -396,7 +433,7 @@ function loadDashboard() {
 		document.getElementById('moodGraph').innerHTML = "<p class='text-center'><em>Loading mood graph...</em></p>";
 		document.getElementById('recentActivity').innerHTML = "<p class='text-center'><em>Loading activity...</em></p>";
 				// TODO: In production, get userId from cookies or session storage
-		var userId = 'nandan'; // Default user ID for development
+		var userId = 1; // Default user ID for development
 		
 		// Try to load each component separately to prevent one failure from breaking everything
 		try {
@@ -421,7 +458,7 @@ function loadDashboard() {
 
 /**
  * Fetches recent journal activity for dashboard display
- * @param {string} userId - The user ID (currently hardcoded as 'nandan')
+ * @param {string} userId - The user ID (currently hardcoded as 1)
  */
 function retrieveRecentActivityForDashboard(userId) {
 	try {
@@ -464,7 +501,6 @@ function displayRecentActivity(entries) {
 		var excerpt = entry.content.length > 50 ? entry.content.substring(0, 50) + '...' : entry.content;
 		
 		newElement += "<li class=\"list-group-item\">";
-		newElement += "<span class=\"badge\">" + entry.moodScore + "/10</span>";
 		newElement += "<strong>" + date + "</strong>: ";
 		newElement += excerpt;
 		newElement += "</li>";
@@ -484,7 +520,7 @@ function displayRecentActivity(entries) {
 
 /**
  * Fetches emotion data from the server for graphing
- * @param {string} userId - The user ID (currently hardcoded as 'nandan')
+ * @param {string} userId - The user ID (currently hardcoded as 1)
  */
 function fetchEmotionDataForGraph(userId) {
 	var xmlhttp = new XMLHttpRequest();
@@ -743,7 +779,7 @@ function checkApiAvailability() {
 		}
 	};
 		// TODO: In production, get userId from cookies or session storage
-	var userId = 'nandan'; // Default user ID for development
+	var userId = 1; // Default user ID for development
 	// Try to fetch emotions API - just to check if server is responding
 	xhr.open('GET', '/app/emotion/monthly/' + userId, true);
 	xhr.send();

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f3052f5d-f351-4717-98c9-382883ab5aa0",
+		"_postman_id": "368f55ab-8615-4a9f-82a2-a45e57803075",
 		"name": "EchoJournal",
 		"description": "API collection for testing Journal and Emotion entries",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -45,7 +45,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": \"nandan\",\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"moodScore\": 8,\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-04T12:00:00Z\"\n}"
+							"raw": "{\n    \"userId\": 1,\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-04T12:00:00Z\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/app/journal/",
@@ -70,7 +70,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/app/journal/recent/nandan",
+							"raw": "http://localhost:8080/app/journal/recent/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -80,7 +80,7 @@
 								"app",
 								"journal",
 								"recent",
-								"nandan"
+								"1"
 							]
 						},
 						"description": "Get recent journal entries for a user"
@@ -93,7 +93,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/app/journal/all/nandan?page=1&limit=10",
+							"raw": "http://localhost:8080/app/journal/all/1?page=1&limit=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -103,7 +103,7 @@
 								"app",
 								"journal",
 								"all",
-								"nandan"
+								"1"
 							],
 							"query": [
 								{
@@ -121,44 +121,12 @@
 					"response": []
 				},
 				{
-					"name": "Update Journal Entry",
+					"name": "Get Specific Journal Entry",
 					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"content\": \"Updated journal entry content. Today was even more productive than I initially thought!\",\n    \"moodScore\": 9,\n    \"feelings\": [\"productive\", \"satisfied\", \"energetic\"]\n}"
-						},
-						"url": {
-							"raw": "http://localhost:8080/app/journal/{{JournalId}}/nandan",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"journal",
-								"{{JournalId}}",
-								"nandan"
-							]
-						},
-						"description": "Update an existing journal entry"
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Journal Entry",
-					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/app/journal/{{JournalId}}/nandan",
+							"raw": "http://localhost:8080/app/journal/{{JournalId}}/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -168,10 +136,9 @@
 								"app",
 								"journal",
 								"{{JournalId}}",
-								"nandan"
+								"1"
 							]
-						},
-						"description": "Delete a journal entry"
+						}
 					},
 					"response": []
 				}
@@ -193,7 +160,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": \"nandan\",\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
+							"raw": "{\n    \"userId\": 1,\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"people\": [\"coworkers\", \"manager\"],\n    \"place\": [\"office\", \"meeting room\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/app/emotion/",
@@ -218,7 +185,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/app/emotion/monthly/nandan",
+							"raw": "http://localhost:8080/app/emotion/monthly/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -228,10 +195,33 @@
 								"app",
 								"emotion",
 								"monthly",
-								"nandan"
+								"1"
 							]
 						},
 						"description": "Get monthly emotion data for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Emotion Entries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/emotion/all/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"emotion",
+								"all",
+								"1"
+							]
+						},
+						"description": "Get all emotion entries for a user"
 					},
 					"response": []
 				}

@@ -1,9 +1,6 @@
 <html>
 	<head> 
-		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-		<!-- Optional theme -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 		
 		<!-- Custom styles -->
@@ -18,8 +15,25 @@
 				margin-left: -2px;
 				margin-top: -2px;
 			}
+			body {
+				background-color: #f0fdfa !important;
+				color: #333; /* Changed from white to a dark color for better visibility */
+			}
+			.panel, .navbar, .jumbotron {
+				background-color: white;
+				color: #333; /* Ensuring consistent text color */
+			}
+			/* Additional style to ensure text visibility in all tabs */
+			.panel-heading, .panel-body, .table, .form-group, label, p, h1, h2, h3, h4, h5, h6 {
+				color: #333 !important;
+			}
+			/* Special styles for the dashboard headers that should remain teal */
+			.dashboard-header {
+				color: #0f766e !important;
+			}
 		</style>
-	</head>	<body onload="setTimeout(function() { initXHR('dashboard', null); }, 100)">
+	</head>	
+	<body onload="setTimeout(function() { initXHR('dashboard', null); }, 100)">
 		<div class="container">
 
 		  <!-- Static navbar -->
@@ -45,8 +59,8 @@
 					</ul>
 				  </li>
 				</ul>
-			  </div><!--/.nav-collapse -->
-			</div><!--/.container-fluid -->
+			  </div>
+			</div>
 		  </nav>
 		  
 		  <!-- Error message container -->
@@ -56,8 +70,8 @@
 		  <!-- Main component for the dashboard with mood tracking graph -->
 		  <div class="row">
 		    <div class="col-md-12">
-			  <h1>Echo Journal Dashboard</h1>
-			  <p>Track your mood and emotions over time</p>
+			  <h1 class="dashboard-header" style="color: #0f766e">EchoJournal</h1>
+			  <p class="dashboard-header" style="color: #0f766e">Track your mood and emotions over time</p>
 			</div>
 		  </div>
 		  
@@ -65,7 +79,8 @@
 		    <div class="col-md-8">
 			  <div class="panel panel-default">
 			    <div class="panel-heading">
-				  <h3>Mood Tracking</h3>
+				  <h3 class="dashboard-header" style="color: #0f766e">Emotion Tracking</h3>
+				  <p class="dashboard-header" style="color: #0f766e">Your emotional journey over the time</p>
 				</div>
 				<div class="panel-body">
 				  <div id="moodGraph" style="height: 350px;"></div>
@@ -101,7 +116,6 @@
 		</div>
 		
 		<div id="home" style="display:none;">
-		  <!-- Main component for a primary marketing message or call to action -->
 		  <div class="jumbotron">
 			<h1>Echo Journal</h1>
 			<p>Keep track of your life.</p>
@@ -115,7 +129,6 @@
 		</div>
 		<div id="gList" style="display:none;">
 			<div class="panel panel-default">
-			  <!-- Default panel contents -->
 			  <div class="panel-heading"> 
 				  <h3>List</h3>
 				  <div>
@@ -161,9 +174,13 @@
 						<div class="form-group">
 							<label for="journalContent">What's on your mind today?</label>
 							<textarea class="form-control" id="journalContent" rows="5" required></textarea>
-						</div>					<div class="form-group">
+						</div>
+						<div class="form-group">
 							<label for="journalFeelings">How are you feeling? (comma-separated)</label>
 							<input type="text" class="form-control" id="journalFeelings" placeholder="happy, excited, motivated" required>
+						</div>						<div class="form-group">
+							<label for="journalMoodScore">Mood Score (1-10)</label>
+							<input type="number" class="form-control" id="journalMoodScore" min="1" max="10" required>
 						</div>
 						<button type="button" class="btn btn-primary" onclick="createJournalEntry()">Save Entry</button>
 						<a href="javascript:initXHR('dashboard', null)" class="btn btn-default">Back to Dashboard</a>
@@ -178,17 +195,10 @@
 					<h3>Track Your Emotions</h3>
 				</div>
 				<div class="panel-body">
-					<form id="emotionForm">						<div class="form-group">
+					<form id="emotionForm">
+						<div class="form-group">
 							<label for="emotionFeelings">What emotions are you experiencing? (comma-separated)</label>
 							<input type="text" class="form-control" id="emotionFeelings" placeholder="calm, focused, relaxed" required>
-						</div>
-						<div class="form-group">
-							<label for="emotionPeople">People you were with (comma-separated)</label>
-							<input type="text" class="form-control" id="emotionPeople" placeholder="mom, dad, friend" required>
-						</div>
-						<div class="form-group">
-							<label for="emotionPlace">Places you visited (comma-separated)</label>
-							<input type="text" class="form-control" id="emotionPlace" placeholder="home, office, park" required>
 						</div>						<div class="form-group">
 							<label for="emotionMoodScore">Current Mood Score (1-10)</label>
 							<input type="number" class="form-control" id="emotionMoodScore" min="1" max="10" required>
@@ -215,26 +225,20 @@
 				</div>
 			</div>
 		</div>
-		
-		</div> <!-- /container -->
-	
-		<!-- Journal Entry Modal -->
-		<div class="modal fade" id="journalEntryModal" tabindex="-1" role="dialog" aria-labelledby="journalEntryModalLabel">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="journalEntryModalLabel">Journal Entry</h4>
-					</div>
-					<div class="modal-body" id="journalEntryModalBody">
-						<!-- Entry details will be loaded here -->
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
+		<!-- Footer Mood Summary -->
+		<div class="row">
+			<div class="col-md-12">
+			<div class="panel panel-default" style="background-color: #ffffff; border-left: 5px solid #0f766e; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+				<div class="panel-body">
+				<h4 style="color: #0f766e; margin-top: 0;">Today's Mood Summary</h4>
+				<p style="color: #475569;">
+					Your mood has been mostly positive today. You've logged 3 journal entries and completed 2 affirmations.
+				</p>
 				</div>
 			</div>
+			</div>
 		</div>
+		</div> <!-- /container -->
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

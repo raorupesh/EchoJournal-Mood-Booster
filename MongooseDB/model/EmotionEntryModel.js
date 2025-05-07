@@ -11,14 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmotionEntryModel = void 0;
 const Mongoose = require("mongoose");
+const crypto = require("crypto");
 class EmotionEntryModel {
     constructor(DB_CONNECTION_STRING) {
         this.dbConnectionString = DB_CONNECTION_STRING;
         this.createSchema();
         this.createModel();
     }
+    // Generate a unique ID using crypto
+    generateId() {
+        return crypto.randomBytes(16).toString('hex');
+    }
     createSchema() {
         this.schema = new Mongoose.Schema({
+            id: { type: String, required: true, default: () => this.generateId(), unique: true },
             userId: { type: Number, required: true },
             date: { type: Date, required: true },
             moodScore: { type: Number, required: true },
@@ -59,6 +65,7 @@ class EmotionEntryModel {
                     throw new Error("place must be an array of strings");
                 }
                 const entry = new this.model({
+                    id: data.id || this.generateId(),
                     userId: data.userId,
                     moodScore: data.moodScore,
                     feelings: data.feelings,
@@ -88,7 +95,7 @@ class EmotionEntryModel {
                     date: { $gte: startDate, $lte: endDate }
                 }).sort({ date: 1 }).exec();
                 return entries.map((entry) => ({
-                    id: entry._id,
+                    id: entry.id,
                     date: entry.date,
                     moodScore: entry.moodScore,
                     feelings: entry.feelings,
@@ -110,7 +117,7 @@ class EmotionEntryModel {
                     userId: userId
                 }).sort({ date: -1 }).exec();
                 return entries.map((entry) => ({
-                    id: entry._id,
+                    id: entry.id,
                     date: entry.date,
                     moodScore: entry.moodScore,
                     feelings: entry.feelings,

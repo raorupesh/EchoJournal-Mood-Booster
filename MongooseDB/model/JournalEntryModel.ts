@@ -1,4 +1,5 @@
 import * as Mongoose from "mongoose";
+import * as crypto from "crypto";
 import { IJournalEntryModel } from "../interfaces/IJournalEntryModel";
 
 class JournalEntryModel {
@@ -11,10 +12,16 @@ class JournalEntryModel {
         this.createSchema();
         this.createModel();
     }
+    
+    // Generate a unique ID using crypto
+    private generateId(): string {
+        return crypto.randomBytes(16).toString('hex');
+    }
 
     public createSchema() {
         this.schema = new Mongoose.Schema(
             {
+                id: { type: String, required: true, default: () => this.generateId(), unique: true },
                 userId: { type: Number, required: true },
                 date: { type: Date, required: true },
                 content: { type: String, required: true },
@@ -40,8 +47,10 @@ class JournalEntryModel {
         content: string;
         feelings: string[];
         date?: Date;
+        id?: string;
     }) {
         const entry = new this.model({
+            id: data.id || this.generateId(),
             userId: data.userId,
             content: data.content,
             feelings: data.feelings,
@@ -52,8 +61,8 @@ class JournalEntryModel {
         return await entry.save();
     }
 
-    public async getJournalEntry(id: number, userId: number) {
-        return await this.model.findOne({ _id: id, userId }).exec();
+    public async getJournalEntry(entryId: string, userId: number) {
+        return await this.model.findOne({ id: entryId, userId }).exec();
     }
 
 
@@ -75,11 +84,11 @@ class JournalEntryModel {
         return { total, entries };
     }
 
-    public async updateJournalEntry(id: string, userId: number, update: {
+    public async updateJournalEntry(entryId: string, userId: number, update: {
         content?: string;
         feelings?: string[];
     }) {
-        const entry = await this.model.findOne({ _id: id, userId });
+        const entry = await this.model.findOne({ id: entryId, userId });
         if (!entry) {
             return null;
         }
@@ -90,20 +99,20 @@ class JournalEntryModel {
             updatedAt: new Date() 
         };
         
-        const updatedEntry = await this.model.findByIdAndUpdate(
-            id,
+        const updatedEntry = await this.model.findOneAndUpdate(
+            { id: entryId },
             updatedData,
             { new: true, runValidators: true }
         );
         return updatedEntry;
     }
 
-    public async deleteJournalEntry(id: number, userId: number) {
-        const entry = await this.model.findOne({ _id: id, userId });
+    public async deleteJournalEntry(entryId: string, userId: number) {
+        const entry = await this.model.findOne({ id: entryId, userId });
         if (!entry) {
             return null;
         }
-        await this.model.findByIdAndDelete(id);
+        await this.model.findOneAndDelete({ id: entryId });
         return true;
     }
 }

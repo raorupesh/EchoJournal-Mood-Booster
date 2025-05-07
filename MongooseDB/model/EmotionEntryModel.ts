@@ -1,4 +1,5 @@
 import * as Mongoose from "mongoose";
+import * as crypto from "crypto";
 import { IEmotionEntryModel } from "../interfaces/IEmotionEntryModel";
 
 class EmotionEntryModel {
@@ -12,9 +13,15 @@ class EmotionEntryModel {
         this.createModel();
     }
 
+    // Generate a unique ID using crypto
+    private generateId(): string {
+        return crypto.randomBytes(16).toString('hex');
+    }
+
     public createSchema() {
         this.schema = new Mongoose.Schema(
             {
+                id: { type: String, required: true, default: () => this.generateId(), unique: true },
                 userId: { type: Number, required: true },
                 date: { type: Date, required: true },
                 moodScore: { type: Number, required: true },
@@ -45,6 +52,7 @@ class EmotionEntryModel {
         people: string[];
         place: string[];
         date?: Date;
+        id?: string;
     }) {
         try {
             // Validate input
@@ -69,6 +77,7 @@ class EmotionEntryModel {
             }
             
             const entry = new this.model({
+                id: data.id || this.generateId(),
                 userId: data.userId,
                 moodScore: data.moodScore,
                 feelings: data.feelings,
@@ -100,7 +109,7 @@ class EmotionEntryModel {
             }).sort({ date: 1 }).exec();
             
             return entries.map((entry: IEmotionEntryModel) => ({
-                id: entry._id,
+                id: entry.id,
                 date: entry.date,
                 moodScore: entry.moodScore,
                 feelings: entry.feelings,
@@ -121,7 +130,7 @@ class EmotionEntryModel {
             }).sort({ date: -1 }).exec();
 
             return entries.map((entry: IEmotionEntryModel) => ({
-                id: entry._id,
+                id: entry.id,
                 date: entry.date,
                 moodScore: entry.moodScore,
                 feelings: entry.feelings,

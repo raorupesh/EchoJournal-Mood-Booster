@@ -11,14 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JournalEntryModel = void 0;
 const Mongoose = require("mongoose");
+const crypto = require("crypto");
 class JournalEntryModel {
     constructor(DB_CONNECTION_STRING) {
         this.dbConnectionString = DB_CONNECTION_STRING;
         this.createSchema();
         this.createModel();
     }
+    // Generate a unique ID using crypto
+    generateId() {
+        return crypto.randomBytes(16).toString('hex');
+    }
     createSchema() {
         this.schema = new Mongoose.Schema({
+            id: { type: String, required: true, default: () => this.generateId(), unique: true },
             userId: { type: Number, required: true },
             date: { type: Date, required: true },
             content: { type: String, required: true },
@@ -41,6 +47,7 @@ class JournalEntryModel {
     createJournalEntry(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const entry = new this.model({
+                id: data.id || this.generateId(),
                 userId: data.userId,
                 content: data.content,
                 feelings: data.feelings,
@@ -51,9 +58,9 @@ class JournalEntryModel {
             return yield entry.save();
         });
     }
-    getJournalEntry(id, userId) {
+    getJournalEntry(entryId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.model.findOne({ _id: id, userId }).exec();
+            return yield this.model.findOne({ id: entryId, userId }).exec();
         });
     }
     getRecentJournalEntries(userId, limit = 3) {
@@ -76,25 +83,25 @@ class JournalEntryModel {
             return { total, entries };
         });
     }
-    updateJournalEntry(id, userId, update) {
+    updateJournalEntry(entryId, userId, update) {
         return __awaiter(this, void 0, void 0, function* () {
-            const entry = yield this.model.findOne({ _id: id, userId });
+            const entry = yield this.model.findOne({ id: entryId, userId });
             if (!entry) {
                 return null;
             }
             // Add updatedAt timestamp to the update
             const updatedData = Object.assign(Object.assign({}, update), { updatedAt: new Date() });
-            const updatedEntry = yield this.model.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+            const updatedEntry = yield this.model.findOneAndUpdate({ id: entryId }, updatedData, { new: true, runValidators: true });
             return updatedEntry;
         });
     }
-    deleteJournalEntry(id, userId) {
+    deleteJournalEntry(entryId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const entry = yield this.model.findOne({ _id: id, userId });
+            const entry = yield this.model.findOne({ id: entryId, userId });
             if (!entry) {
                 return null;
             }
-            yield this.model.findByIdAndDelete(id);
+            yield this.model.findOneAndDelete({ id: entryId });
             return true;
         });
     }

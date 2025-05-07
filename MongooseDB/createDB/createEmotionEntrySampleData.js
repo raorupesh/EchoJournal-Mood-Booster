@@ -6,8 +6,10 @@ db.createCollection('emotionentries')
 emotionCollection = db.getCollection("emotionentries")
 emotionCollection.remove({})
 
+// Using predefined IDs instead of generating them
 // Insert sample emotion entries
 emotionCollection.insert({
+    id: "e001f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-04-25T08:00:00Z"),
     feelings: ["happy", "energized"],
@@ -18,6 +20,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e002f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-04-26T12:30:00Z"),
     feelings: ["focused", "content"],
@@ -28,6 +31,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e003f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-04-27T21:00:00Z"),
     feelings: ["anxious", "hopeful"],
@@ -38,6 +42,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e004f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-04-28T10:15:00Z"),
     feelings: ["inspired", "motivated"],
@@ -48,6 +53,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e005f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-04-29T18:45:00Z"),
     feelings: ["tired", "accomplished"],
@@ -58,6 +64,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e006f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-04-30T09:30:00Z"),
     feelings: ["calm", "relaxed"],
@@ -68,6 +75,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e007f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-05-01T14:20:00Z"),
     feelings: ["excited", "nervous"],
@@ -78,6 +86,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e008f2345a6789b0c1d2e3f4",
     userId: 1,
     date: new Date("2025-05-02T20:00:00Z"),
     feelings: ["satisfied", "proud"],
@@ -88,6 +97,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e009f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-03T09:15:00Z"),
     feelings: ["motivated"],
@@ -98,6 +108,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e010f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-05T11:30:00Z"),
     feelings: ["focused", "determined"],
@@ -108,6 +119,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e011f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-06T16:45:00Z"),
     feelings: ["content", "peaceful"],
@@ -118,6 +130,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e012f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-07T08:20:00Z"),
     feelings: ["stressed", "overwhelmed"],
@@ -128,6 +141,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e013f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-08T13:10:00Z"),
     feelings: ["optimistic", "energetic"],
@@ -138,6 +152,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e014f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-09T19:30:00Z"),
     feelings: ["grateful", "relaxed"],
@@ -148,6 +163,7 @@ emotionCollection.insert({
 })
 
 emotionCollection.insert({
+    id: "e015f2345a6789b0c1d2e3f4",
     userId: 2,
     date: new Date("2025-04-04T19:45:00Z"),
     feelings: ["tired", "relieved"],

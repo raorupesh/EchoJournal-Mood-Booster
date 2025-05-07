@@ -108,14 +108,19 @@ class EmotionEntryModel {
                 return [];
             }
         });
-    }
-    // Get all emotion entries for a user
+    } // Get all emotion entries for a user
     getAllEmotionEntries(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const entries = yield this.model.find({
-                    userId: userId
-                }).sort({ date: -1 }).exec();
+                let entries;
+                if (userId) {
+                    entries = yield this.model.find({
+                        userId: userId
+                    }).sort({ date: -1 }).exec();
+                }
+                else {
+                    entries = yield this.model.find().sort({ date: -1 }).exec();
+                }
                 return entries.map((entry) => ({
                     id: entry.id,
                     date: entry.date,

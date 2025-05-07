@@ -122,6 +122,16 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
             }
         }));
+        router.get('/app/emotion/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const data = yield this.EmotionEntries.getAllEmotionEntries();
+                res.status(200).json({ success: true, data });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
+            }
+        }));
         // Add route for root path to serve index.html
         router.get('/', (req, res) => {
             res.sendFile('index.html', { root: __dirname + '/pages' });

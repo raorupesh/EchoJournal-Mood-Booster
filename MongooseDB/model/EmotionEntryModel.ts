@@ -36,7 +36,6 @@ class EmotionEntryModel {
 
     public createModel() {
         try {
-            // Don't create a new connection here - we'll rely on the connection from JournalEntryModel
             this.model = Mongoose.model<IEmotionEntryModel>("EmotionEntry", this.schema);
         } catch (e) {
             // If model already exists, just retrieve it
@@ -120,14 +119,18 @@ class EmotionEntryModel {
             console.error("Error fetching monthly emotions:", e);
             return [];
         }
-    }
-
-    // Get all emotion entries for a user
-    public async getAllEmotionEntries(userId: number) {
+    }    // Get all emotion entries for a user
+    public async getAllEmotionEntries(userId?: number) {
         try {
-            const entries = await this.model.find({
-                userId: userId
-            }).sort({ date: -1 }).exec();
+            let entries;
+            if(userId){
+                entries = await this.model.find({
+                    userId: userId
+                }).sort({ date: -1 }).exec();
+            }
+            else{
+                entries = await this.model.find().sort({ date: -1 }).exec();
+            }
 
             return entries.map((entry: IEmotionEntryModel) => ({
                 id: entry.id,

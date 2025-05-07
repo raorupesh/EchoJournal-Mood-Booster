@@ -24,8 +24,8 @@ class App {
     });
   }
   private routes(): void {
-    let router = express.Router();    
-    
+    let router = express.Router();
+
     // Journal Entry routes
     router.post('/app/journal/', async (req, res) => {
       try {
@@ -114,6 +114,16 @@ class App {
         res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
       }
     });
+
+    router.get('/app/emotion/all', async (req, res) => {
+      try {
+        const data = await this.EmotionEntries.getAllEmotionEntries();
+        res.status(200).json({ success: true, data, });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
+      }
+    })
 
     // Add route for root path to serve index.html
     router.get('/', (req, res) => {

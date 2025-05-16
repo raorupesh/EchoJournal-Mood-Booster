@@ -1,0 +1,47 @@
+.legend-color {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.legend-text {
+  font-size: 0.8rem;
+}
+
+.emotion-data {
+  margin-bottom: 20px;
+}
+
+.emotion-item {
+  display: inline-block;
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #666;
+  padding: 4px 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.day {
+  font-weight: bold;
+  color: #333;
+}
+
+.emotion-name {
+  color: #4CAF50;
+}
+
+.intensity {
+  color: #666;
+  font-size: 0.8rem;
+}

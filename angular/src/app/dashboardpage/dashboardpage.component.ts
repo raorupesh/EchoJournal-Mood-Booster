@@ -1,28 +1,32 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { RecentactivityComponent } from '../recentactivity/recentactivity.component';
 import { EmotiongraphComponent } from '../emotiongraph/emotiongraph.component';
 
 @Component({
   selector: 'app-dashboardpage',
-  imports: [CommonModule, RecentactivityComponent, EmotiongraphComponent],
+  standalone: true,
+  imports: [CommonModule, RouterModule, RecentactivityComponent, EmotiongraphComponent],
   templateUrl: './dashboardpage.component.html',
-  styleUrl: './dashboardpage.component.css',
+  styleUrls: ['./dashboardpage.component.css']
 })
 export class DashboardpageComponent {
-  
+
+  constructor(private router: Router) {}
+
   openMoodEcho(): void {
     console.log('Mood Echo clicked');
-    // Add functionality here when needed
+    this.router.navigate(['/emotionalenteries']);
   }
 
   openLogJournal(): void {
     console.log('Log Journal clicked');
-    // Add functionality here when needed
+    this.router.navigate(['/journalenteries']);
   }
 
   openAffirmations(): void {
     console.log('My Affirmations clicked');
-    // Add functionality here when needed
+    this.router.navigate(['/myaffirmations']);
   }
 }

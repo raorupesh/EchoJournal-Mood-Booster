@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <h2 class="mb-3">New Journal Entry</h2>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <form #journalForm="ngForm" (ngSubmit)="onSubmit(journalForm)">
+    <div class="mb-3">
+      <label for="feelings" class="form-label">Feelings (comma-separated)</label>
+      <input
+        type="text"
+        id="feelings"
+        name="feelings"
+        class="form-control"
+        [(ngModel)]="journal.feelings"
+        placeholder="e.g., happy, relaxed, focused"
+        required
+      />
+    </div>
+
+
+    <div class="mb-3">
+      <label for="content" class="form-label">Journal Content</label>
+      <textarea
+        id="content"
+        name="content"
+        class="form-control"
+        rows="5"
+        [(ngModel)]="journal.content"
+        placeholder="Write about your day, thoughts, or emotions..."
+        required
+      ></textarea>
+    </div>
+
+    <div class="d-flex">
+      <button type="submit" class="btn btn-primary" [disabled]="journalForm.invalid || isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        Save Entry
+      </button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="goBack()">Cancel</button>
+    </div>
+  </form>
+</div>

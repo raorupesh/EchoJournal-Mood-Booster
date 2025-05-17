@@ -36,7 +36,6 @@ class EmotionEntryModel {
     }
     createModel() {
         try {
-            // Don't create a new connection here - we'll rely on the connection from JournalEntryModel
             this.model = Mongoose.model("EmotionEntry", this.schema);
         }
         catch (e) {

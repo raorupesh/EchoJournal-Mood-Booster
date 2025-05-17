@@ -1,0 +1,81 @@
+
+  <div class="container mt-4">
+    <h1>Mood Echo Entry</h1>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <form #moodForm="ngForm" (ngSubmit)="onSubmit(moodForm)">
+      <div class="mb-3">
+        <label for="emojiSlider" class="form-label">Your Mood:</label><br>
+        <input type="range"
+               id="emojiSlider"
+               name="emojiSlider"
+               min="1" max="10"
+               step="1"
+               [(ngModel)]="moodEntry.emojiSlider"
+               (input)="updateEmoji(moodEntry.emojiSlider)"
+               value="5">
+        <span id="emojiDisplay">{{ emojiDisplay }}</span>
+      </div>
+      
+      <div class="mb-3">
+        <label for="feelings" class="form-label">How are you feeling? (comma separated)</label><br>
+        <input type="text"
+               id="feelings"
+               name="feelings"
+               class="form-control"
+               [(ngModel)]="moodEntry.feelings"
+               placeholder="e.g., happy, relaxed, anxious"
+               required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="withWhom" class="form-label">Who are you with?</label><br>
+        <select id="withWhom"
+                name="withWhom"
+                class="form-select"
+                [(ngModel)]="moodEntry.withWhom"
+                required>
+          <option value="friends">Friends</option>
+          <option value="family">Family</option>
+          <option value="myself">Myself</option>
+          <option value="partner">Partner</option>
+          <option value="team">Team</option>
+          <option value="others">Others</option>
+        </select>
+      </div>
+      
+      <div class="mb-3">
+        <label for="location" class="form-label">Where were you?</label><br>
+        <select id="location"
+                name="location"
+                class="form-select"
+                [(ngModel)]="moodEntry.location"
+                required>
+          <option value="home">Home</option>
+          <option value="workplace">Workplace</option>
+          <option value="school">School</option>
+          <option value="gym">Gym</option>
+          <option value="cafe">Cafe</option>
+          <option value="park">Park</option>
+          <option value="others">Others</option>
+        </select>
+      </div>
+      
+      <br>
+      
+      <button type="submit" class="btn btn-primary" [disabled]="moodForm.invalid || isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+        Save
+      </button>
+      
+      <button type="button" class="btn btn-secondary ms-2" (click)="goBack()">
+        Cancel
+      </button>
+    </form>
+  </div>

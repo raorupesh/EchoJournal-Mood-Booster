@@ -125,7 +125,7 @@ class App {
         router.get('/app/emotion/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = yield this.EmotionEntries.getAllEmotionEntries();
-                res.status(200).json({ success: true, data });
+                res.status(200).json({ success: true, data, });
             }
             catch (e) {
                 console.error(e);

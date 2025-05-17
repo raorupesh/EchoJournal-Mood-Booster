@@ -1,10 +1,4 @@
 <div class="container-fluid p-4">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h1 class="text-success fw-bold">EchoJournal</h1>
-      <p class="text-secondary">Track your emotions, reflect on your journey</p>
-    </div>
-  </div>
   
   <div class="row mb-2">
     <div class="col-md-8">
@@ -38,6 +32,19 @@
       <button class="btn btn-warning w-100 py-4" (click)="openAffirmations()">
         <i class="bi bi-sun me-2"></i> My Affirmations
       </button>
+    </div>
+  </div>
+
+    <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm bg-light">
+        <div class="card-body">
+          <h5 class="card-title text-success">Today's Mood Summary</h5>
+          <div class="mt-2">
+            <p class="mb-2">Your mood has been mostly positive today. You've logged 3 journal entries and completed 2 affirmations.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

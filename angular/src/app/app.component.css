@@ -20,3 +20,11 @@
   font-weight: bold;
   font-size: 1rem;
 }
+
+
+.header-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 12px;
+}

@@ -1,0 +1,250 @@
+<html>
+	<head> 
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+		
+		<!-- Custom styles -->
+		<style>
+			.mood-graph {
+				margin-top: 20px;
+			}
+			.data-point:hover {
+				background-color: #23527c !important;
+				width: 14px !important;
+				height: 14px !important;
+				margin-left: -2px;
+				margin-top: -2px;
+			}
+			body {
+				background-color: #f0fdfa !important;
+				color: #333; /* Changed from white to a dark color for better visibility */
+			}
+			.panel, .navbar, .jumbotron {
+				background-color: white;
+				color: #333; /* Ensuring consistent text color */
+			}
+			/* Additional style to ensure text visibility in all tabs */
+			.panel-heading, .panel-body, .table, .form-group, label, p, h1, h2, h3, h4, h5, h6 {
+				color: #333 !important;
+			}
+			/* Special styles for the dashboard headers that should remain teal */
+			.dashboard-header {
+				color: #0f766e !important;
+			}
+		</style>
+	</head>	
+	<body onload="setTimeout(function() { initXHR('dashboard', null); }, 100)">
+		<div class="container">
+
+		  <!-- Static navbar -->
+		  <nav class="navbar navbar-default">
+			<div class="container-fluid">
+			  <div class="navbar-header">
+				<a class="navbar-brand" href="javascript:initXHR('dashboard', null)">Echo Journal</a>
+			  </div>
+			  <div id="navbar" class="navbar-collapse collapse">				<ul class="nav navbar-nav">
+				  <li><a href="javascript:initXHR('dashboard', null)">Dashboard</a></li>
+				  <li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Journal<span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+					  <li><a href="javascript:initXHR('journal', null)">Entries</a></li>
+					  <li><a href="javascript:initXHR('createJournal', null)">Create New</a></li>
+					</ul>
+				  </li>
+				  <li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Emotions<span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+					  <li><a href="javascript:initXHR('emotions', null)">Log</a></li>
+					  <li><a href="javascript:initXHR('createEmotion', null)">Track Now</a></li>
+					</ul>
+				  </li>
+				</ul>
+			  </div>
+			</div>
+		  </nav>
+		  
+		  <!-- Error message container -->
+		  <div id="errorMessages" style="display:none;" class="alert alert-danger">
+		  </div>
+				<div id="dashboard">
+		  <!-- Main component for the dashboard with mood tracking graph -->
+		  <div class="row">
+		    <div class="col-md-12">
+			  <h1 class="dashboard-header" style="color: #0f766e">EchoJournal</h1>
+			  <p class="dashboard-header" style="color: #0f766e">Track your mood and emotions over time</p>
+			</div>
+		  </div>
+		  
+		  <div class="row">
+		    <div class="col-md-8">
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+				  <h3 class="dashboard-header" style="color: #0f766e">Emotion Tracking</h3>
+				  <p class="dashboard-header" style="color: #0f766e">Your emotional journey over the time</p>
+				</div>
+				<div class="panel-body">
+				  <div id="moodGraph" style="height: 350px;"></div>
+				</div>
+			  </div>
+			</div>
+			
+			<div class="col-md-4">
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+				  <h3>Recent Activity</h3>
+				</div>
+				<div class="panel-body" style="height: 400px; overflow-y: auto;">
+				  <div id="recentActivity">
+				    <p>Loading recent activity...</p>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  
+		  <div class="row text-center" style="margin-top: 20px; margin-bottom: 30px;">
+		    <div class="col-md-4">
+			  <a class="btn btn-lg btn-primary btn-block" href="javascript:initXHR('createEmotion', null)" role="button">Add Mood Entry</a>
+			</div>
+			<div class="col-md-4">
+			  <a class="btn btn-lg btn-success btn-block" href="javascript:initXHR('createJournal', null)" role="button">Add Journal Entry</a>
+			</div>
+			<div class="col-md-4">
+			  <a class="btn btn-lg btn-info btn-block" href="javascript:initXHR('affirmations', null)" role="button">My Affirmations</a>
+			</div>
+		  </div>
+		</div>
+		
+		<div id="home" style="display:none;">
+		  <div class="jumbotron">
+			<h1>Echo Journal</h1>
+			<p>Keep track of your life.</p>
+			<p>
+			  <a class="btn btn-lg btn-primary" href="javascript:initXHR('journal', null)" role="button">View</a>
+			</p>
+		  </div>
+		</div>
+		
+		<div id="lists" style="display:none;">
+		</div>
+		<div id="gList" style="display:none;">
+			<div class="panel panel-default">
+			  <div class="panel-heading"> 
+				  <h3>List</h3>
+				  <div>
+					<a href="#"><span class="glyphicon glyphicon-edit"></span></a>
+					<a href="#"><span class="glyphicon glyphicon-trash"></span></a>
+					<a href="#"><span class="glyphicon glyphicon-ok"></span></a>
+				  </div>
+			  </div>
+				<!-- Table -->
+				<table class="table" style="font-size:10pt;">
+					<thead>
+						<tr>
+							<th>Items</th>
+							<th width="5%">Shared</th>
+							<th width="5%">Status</th>
+						</tr>
+					</thead>
+					<tbody id='tasks'>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="journal" style="display:none;">
+			<h3 class="panel-heading">Journal Entries</h3>
+			<div id="journalEntries">
+			</div>
+		</div>
+
+		<div id="emotions" style="display:none;">
+			<h3 class="panel-heading">Emotion Tracking</h3>
+			<div id="emotionEntries">
+			</div>
+		</div>
+
+		<div id="createJournal" style="display:none;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>Create New Journal Entry</h3>
+				</div>
+				<div class="panel-body">
+					<form id="journalForm">
+						<div class="form-group">
+							<label for="journalContent">What's on your mind today?</label>
+							<textarea class="form-control" id="journalContent" rows="5" required></textarea>
+						</div>
+						<div class="form-group">
+							<label for="journalFeelings">How are you feeling? (comma-separated)</label>
+							<input type="text" class="form-control" id="journalFeelings" placeholder="happy, excited, motivated" required>
+						</div>						<div class="form-group">
+							<label for="journalMoodScore">Mood Score (1-10)</label>
+							<input type="number" class="form-control" id="journalMoodScore" min="1" max="10" required>
+						</div>
+						<button type="button" class="btn btn-primary" onclick="createJournalEntry()">Save Entry</button>
+						<a href="javascript:initXHR('dashboard', null)" class="btn btn-default">Back to Dashboard</a>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="createEmotion" style="display:none;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>Track Your Emotions</h3>
+				</div>
+				<div class="panel-body">
+					<form id="emotionForm">
+						<div class="form-group">
+							<label for="emotionFeelings">What emotions are you experiencing? (comma-separated)</label>
+							<input type="text" class="form-control" id="emotionFeelings" placeholder="calm, focused, relaxed" required>
+						</div>						<div class="form-group">
+							<label for="emotionMoodScore">Current Mood Score (1-10)</label>
+							<input type="number" class="form-control" id="emotionMoodScore" min="1" max="10" required>
+						</div>
+						<button type="button" class="btn btn-primary" onclick="createEmotionEntry()">Track Emotion</button>
+						<a href="javascript:initXHR('dashboard', null)" class="btn btn-default">Back to Dashboard</a>
+					</form>
+				</div>
+			</div>		</div>
+		
+		<div id="affirmations" style="display:none;">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>My Affirmations</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="affirmationsList">
+								<!-- Affirmations will be loaded here -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Footer Mood Summary -->
+		<div class="row">
+			<div class="col-md-12">
+			<div class="panel panel-default" style="background-color: #ffffff; border-left: 5px solid #0f766e; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+				<div class="panel-body">
+				<h4 style="color: #0f766e; margin-top: 0;">Today's Mood Summary</h4>
+				<p style="color: #475569;">
+					Your mood has been mostly positive today. You've logged 3 journal entries and completed 2 affirmations.
+				</p>
+				</div>
+			</div>
+			</div>
+		</div>
+		</div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="/script.js"></script>
+	</body>
+</html>

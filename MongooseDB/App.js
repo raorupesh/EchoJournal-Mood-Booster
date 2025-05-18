@@ -81,9 +81,11 @@ class App {
         // Journal Entry routes
         // Create new journal entry
         router.post('/api/v1/journal', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
                 const entry = yield this.JournalEntries.createJournalEntry({
-                    userId: req.body.userId || 1,
+                    userId: userId || 1,
                     content: req.body.content,
                     feelings: req.body.feelings,
                     date: req.body.date ? new Date(req.body.date) : undefined
@@ -96,8 +98,9 @@ class App {
             }
         }));
         router.get('/api/v1/journal/recent', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
-                const userId = parseInt(req.query.userId) || 1;
                 const entries = yield this.JournalEntries.getRecentJournalEntries(userId);
                 res.status(200).json({ success: true, data: entries });
             }
@@ -107,8 +110,9 @@ class App {
             }
         }));
         router.get('/api/v1/journal/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
-                const userId = parseInt(req.query.userId) || 1;
                 const page = parseInt(req.query.page) || 1;
                 const limit = parseInt(req.query.limit) || 10;
                 const result = yield this.JournalEntries.getAllJournalEntries(userId, page, limit);
@@ -120,8 +124,9 @@ class App {
             }
         }));
         router.get('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
-                const userId = parseInt(req.query.userId) || 1;
                 const entry = yield this.JournalEntries.getJournalEntry(req.params.id, userId);
                 if (!entry) {
                     return res.status(404).json({ success: false, message: 'Journal entry not found' });
@@ -135,9 +140,11 @@ class App {
         }));
         // Emotion Entry routes
         router.post('/api/v1/emotion', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
                 const entry = yield this.EmotionEntries.createEmotionEntry({
-                    userId: req.body.userId || 1,
+                    userId: userId,
                     moodScore: req.body.moodScore,
                     feelings: req.body.feelings,
                     people: req.body.people || [],
@@ -152,8 +159,9 @@ class App {
             }
         }));
         router.get('/api/v1/emotion/monthly', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
-                const userId = parseInt(req.query.userId) || 1;
                 const data = yield this.EmotionEntries.getMonthlyEmotions(userId);
                 res.status(200).json({ success: true, data });
             }
@@ -163,11 +171,12 @@ class App {
             }
         }));
         router.get('/api/v1/emotion/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
             try {
                 // Optional: if no userId provided, return all entries
-                const userIdParam = req.query.userId;
-                const data = userIdParam
-                    ? yield this.EmotionEntries.getAllEmotionEntries(parseInt(userIdParam))
+                const data = userId
+                    ? yield this.EmotionEntries.getAllEmotionEntries(userId)
                     : yield this.EmotionEntries.getAllEmotionEntries();
                 res.status(200).json({ success: true, data });
             }

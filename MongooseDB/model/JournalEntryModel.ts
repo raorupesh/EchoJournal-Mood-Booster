@@ -84,14 +84,10 @@ class JournalEntryModel {
         return { total, entries };
     }
 
-    public async updateJournalEntry(entryId: string, userId: number, update: {
+    public async updateJournalEntry(entryId: string, update: {
         content?: string;
         feelings?: string[];
     }) {
-        const entry = await this.model.findOne({ id: entryId, userId });
-        if (!entry) {
-            return null;
-        }
         
         // Add updatedAt timestamp to the update
         const updatedData = { 
@@ -107,11 +103,7 @@ class JournalEntryModel {
         return updatedEntry;
     }
 
-    public async deleteJournalEntry(entryId: string, userId: number) {
-        const entry = await this.model.findOne({ id: entryId, userId });
-        if (!entry) {
-            return null;
-        }
+    public async deleteJournalEntry(entryId: string) {
         await this.model.findOneAndDelete({ id: entryId });
         return true;
     }

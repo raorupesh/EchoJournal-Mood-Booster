@@ -83,24 +83,16 @@ class JournalEntryModel {
             return { total, entries };
         });
     }
-    updateJournalEntry(entryId, userId, update) {
+    updateJournalEntry(entryId, update) {
         return __awaiter(this, void 0, void 0, function* () {
-            const entry = yield this.model.findOne({ id: entryId, userId });
-            if (!entry) {
-                return null;
-            }
             // Add updatedAt timestamp to the update
             const updatedData = Object.assign(Object.assign({}, update), { updatedAt: new Date() });
             const updatedEntry = yield this.model.findOneAndUpdate({ id: entryId }, updatedData, { new: true, runValidators: true });
             return updatedEntry;
         });
     }
-    deleteJournalEntry(entryId, userId) {
+    deleteJournalEntry(entryId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const entry = yield this.model.findOne({ id: entryId, userId });
-            if (!entry) {
-                return null;
-            }
             yield this.model.findOneAndDelete({ id: entryId });
             return true;
         });

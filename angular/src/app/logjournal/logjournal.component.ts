@@ -38,7 +38,6 @@ export class LogjournalComponent {
     
     // Convert comma-separated strings to arrays
     const journalToSubmit: JournalEntry = {
-      userId: "1", // In a real app, get this from authentication service
       content: this.journal.content,
       feelings: this.parseCommaSeparated(this.journal.feelings as unknown as string),
       date: new Date()

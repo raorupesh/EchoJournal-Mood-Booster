@@ -74,9 +74,13 @@ class App {
     // Journal Entry routes
     // Create new journal entry
     router.post('/api/v1/journal', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
         const entry = await this.JournalEntries.createJournalEntry({
-          userId: req.body.userId || 1,
+          userId: userId || 1,
           content: req.body.content,
           feelings: req.body.feelings,
           date: req.body.date ? new Date(req.body.date) : undefined
@@ -89,8 +93,11 @@ class App {
     });
  
     router.get('/api/v1/journal/recent', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
-        const userId = parseInt(req.query.userId as string) || 1;
         const entries = await this.JournalEntries.getRecentJournalEntries(userId);
         res.status(200).json({ success: true, data: entries });
       } catch (e) {
@@ -100,8 +107,11 @@ class App {
     });
  
     router.get('/api/v1/journal/all', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
-        const userId = parseInt(req.query.userId as string) || 1;
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
         const result = await this.JournalEntries.getAllJournalEntries(userId, page, limit);
@@ -113,8 +123,11 @@ class App {
     });
  
     router.get('/api/v1/journal/:id', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
-        const userId = parseInt(req.query.userId as string) || 1;
         const entry = await this.JournalEntries.getJournalEntry(req.params.id, userId);
         if (!entry) {
           return res.status(404).json({ success: false, message: 'Journal entry not found' });
@@ -128,9 +141,13 @@ class App {
  
     // Emotion Entry routes
     router.post('/api/v1/emotion', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
         const entry = await this.EmotionEntries.createEmotionEntry({
-          userId: req.body.userId || 1,
+          userId: userId,
           moodScore: req.body.moodScore,
           feelings: req.body.feelings,
           people: req.body.people || [],
@@ -145,8 +162,11 @@ class App {
     });
  
     router.get('/api/v1/emotion/monthly', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
-        const userId = parseInt(req.query.userId as string) || 1;
         const data = await this.EmotionEntries.getMonthlyEmotions(userId);
         res.status(200).json({ success: true, data });
       } catch (e) {
@@ -156,11 +176,14 @@ class App {
     });
  
     router.get('/api/v1/emotion/all', async (req, res) => {
+
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
       try {
         // Optional: if no userId provided, return all entries
-        const userIdParam = req.query.userId as string;
-        const data = userIdParam
-          ? await this.EmotionEntries.getAllEmotionEntries(parseInt(userIdParam))
+        const data = userId
+          ? await this.EmotionEntries.getAllEmotionEntries(userId)
           : await this.EmotionEntries.getAllEmotionEntries();
         res.status(200).json({ success: true, data });
       } catch (e) {

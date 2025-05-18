@@ -89,8 +89,6 @@ function initXHR(x, value) {
  * Queries the API and populates the journal entries list in the UI
  */
 function retrieveJournalEntriesFromServer() {
-	// TODO: In production, get userId from cookies or session storage
-	var userId = 1; // Default user ID for development
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4) {
@@ -125,7 +123,8 @@ function retrieveJournalEntriesFromServer() {
 			}
 		}
 	}
-	xmlhttp.open("GET", '/api/v1/journal/all?userId=' + userId + '&limit=10&page=1', true);
+	// xmlhttp.open("GET", '/api/v1/journal/all' + '?page=1&limit=10', true);
+	xmlhttp.open("GET", '/api/v1/journal/all', true);
 	xmlhttp.send();
 }
 
@@ -134,8 +133,6 @@ function retrieveJournalEntriesFromServer() {
  * Queries the API and populates the emotion entries list in the UI
  */
 function retrieveEmotionEntriesFromServer() {
-	// TODO: In production, get userId from cookies or session storage
-	var userId = 1; // Default user ID for development
 	var xmlhttp = new XMLHttpRequest();
 
 	xmlhttp.onreadystatechange = function() {
@@ -148,7 +145,7 @@ function retrieveEmotionEntriesFromServer() {
 			}
 		}
 	}
-	xmlhttp.open("GET", '/api/v1/emotion/monthly?userId=' + userId, true);
+	xmlhttp.open("GET", '/api/v1/emotion/monthly', true);
 	xmlhttp.send();
 }
 
@@ -195,7 +192,6 @@ function createJournalEntry() {
 	xmlhttp.open("POST", '/api/v1/journal', true);
 	xmlhttp.setRequestHeader('Content-Type', 'application/json');
 	xmlhttp.send(JSON.stringify({
-		userId: 1,  // TODO: In production, get userId from cookies or session storage
 		content: content,
 		feelings: feelings,
 		people: people,
@@ -244,7 +240,6 @@ function createEmotionEntry() {
 
 	// Create the emotion entry data object
 	var emotionData = {
-		userId: 1,  // TODO: In production, get userId from cookies or session storage
 		feelings: feelings,
 		people: people,
 		place: place,
@@ -432,19 +427,17 @@ function loadDashboard() {
 		// Show loading indicators
 		document.getElementById('moodGraph').innerHTML = "<p class='text-center'><em>Loading mood graph...</em></p>";
 		document.getElementById('recentActivity').innerHTML = "<p class='text-center'><em>Loading activity...</em></p>";
-				// TODO: In production, get userId from cookies or session storage
-		var userId = 1; // Default user ID for development
 		
 		// Try to load each component separately to prevent one failure from breaking everything
 		try {
-			retrieveRecentActivityForDashboard(userId);
+			retrieveRecentActivityForDashboard();
 		} catch (e) {
 			console.error('Error loading recent activity:', e);
 			document.getElementById('recentActivity').innerHTML = "<p>No recent activity available.</p>";
 		}
 		
 		try {
-			fetchEmotionDataForGraph(userId);
+			fetchEmotionDataForGraph();
 		} catch (e) {
 			console.error('Error loading emotion graph:', e);
 			document.getElementById('moodGraph').innerHTML = "<p>Unable to load mood graph.</p>";
@@ -458,9 +451,8 @@ function loadDashboard() {
 
 /**
  * Fetches recent journal activity for dashboard display
- * @param {string} userId - The user ID (currently hardcoded as 1)
  */
-function retrieveRecentActivityForDashboard(userId) {
+function retrieveRecentActivityForDashboard() {
 	try {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
@@ -468,8 +460,8 @@ function retrieveRecentActivityForDashboard(userId) {
 				if (xmlhttp.status == 200) {
 					try {
 						var response = JSON.parse(xmlhttp.responseText);
-						if (response.success && response.entries && response.entries.length > 0) {
-							displayRecentActivity(response.entries.slice(0, 5)); // Show only most recent 5 entries
+						if (response.success && response.data) {
+							displayRecentActivity(response.data.slice(0, 5)); // Show only most recent 5 entries
 						} else {
 							document.getElementById('recentActivity').innerHTML = "<p>No recent journal entries.</p>";
 						}
@@ -484,7 +476,7 @@ function retrieveRecentActivityForDashboard(userId) {
 			}
 		}
 		// In retrieveRecentActivityForDashboard, update the GET endpoint to use the recent entries route:
-xmlhttp.open("GET", '/api/v1/journal/recent?userId=' + userId, true);
+xmlhttp.open("GET", '/api/v1/journal/recent', true);
 		xmlhttp.send();
 	} catch (e) {
 		console.error('Error in retrieveRecentActivityForDashboard:', e);
@@ -521,9 +513,8 @@ function displayRecentActivity(entries) {
 
 /**
  * Fetches emotion data from the server for graphing
- * @param {string} userId - The user ID (currently hardcoded as 1)
  */
-function fetchEmotionDataForGraph(userId) {
+function fetchEmotionDataForGraph() {
 	var xmlhttp = new XMLHttpRequest();
 
 	xmlhttp.onreadystatechange = function() {
@@ -563,7 +554,7 @@ function fetchEmotionDataForGraph(userId) {
 			}
 		}
 	}
-	xmlhttp.open("GET", '/api/v1/emotion/monthly?userId=' + userId, true);
+	xmlhttp.open("GET", '/api/v1/emotion/monthly', true);
 	xmlhttp.send();
 }
 
@@ -779,20 +770,17 @@ function checkApiAvailability() {
 			}
 		}
 	};
-		// TODO: In production, get userId from cookies or session storage
-	var userId = 1; // Default user ID for development
 	// Try to fetch emotions API - just to check if server is responding
-	xhr.open('GET', '/api/v1/emotion/monthly?userId=' + userId, true);
+	xhr.open('GET', '/api/v1/emotion/monthly', true);
 	xhr.send();
 }
 
 /**
  * Shows a modal with full journal entry details
- * Uses the GET /app/journal/:id/:userId API endpoint to fetch entry details
+ * Uses the GET /app/journal/:id API endpoint to fetch entry details
  * @param {string} entryId - The ID of the journal entry to display
  */
 function showJournalEntryModal(entryId) {
-	var userId = 1; // TODO: In production, get userId from cookies or session storage
 	var xmlhttp = new XMLHttpRequest();
 	
 	// Show loading indicator in the modal
@@ -846,6 +834,6 @@ function showJournalEntryModal(entryId) {
 	};
 	
 	// Make the API request to get full journal entry details
-	xmlhttp.open("GET", "/api/v1/journal/" + entryId + "?userId=" + userId, true);
+	xmlhttp.open("GET", "/api/v1/journal/" + entryId, true);
 	xmlhttp.send();
 }

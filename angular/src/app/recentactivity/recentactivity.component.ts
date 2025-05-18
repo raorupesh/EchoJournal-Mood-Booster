@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { JournalEntry, JournalenteryproxyService } from '../journalenteryproxy.service';
 
 interface ActivityEntry {
   date: string;
@@ -9,26 +10,40 @@ interface ActivityEntry {
 
 @Component({
   selector: 'app-recentactivity',
+  standalone: true, // Required if using `imports` directly
   imports: [CommonModule],
   templateUrl: './recentactivity.component.html',
-  styleUrl: './recentactivity.component.css'
+  styleUrls: ['./recentactivity.component.css']
 })
-export class RecentactivityComponent {
-  recentEntries: ActivityEntry[] = [
-    {
-      date: 'Today, 2:30 PM',
-      text: 'Had a productive meeting with the team. Everyone was engaged and we made significant progress.',
-      emoji: '😊',
-    },
-    {
-      date: 'Yesterday, 8:15 PM',
-      text: 'Quiet day at home. Finished reading that book I\'ve been working on for weeks.',
-      emoji: '😌',
-    },
-    {
-      date: 'Apr 12, 10:45 AM',
-      text: 'Feeling a bit overwhelmed with all the deadlines coming up. Need to organize my schedule better.',
-      emoji: '😓',
+export class RecentactivityComponent implements OnInit {
+  recentEntries: ActivityEntry[] = [];
+  noRecentEntriesMessage = 'No recent entries available.';
+
+  constructor(private journalService: JournalenteryproxyService) {}
+
+  ngOnInit(): void {
+this.journalService.getRecentEntries().subscribe(
+  (response: { success: boolean; entries: JournalEntry[] }) => {
+    if (response && response.success && response.entries && response.entries.length > 0) {
+      // Display only the top 3 entries
+      this.recentEntries = response.entries
+        .slice(0, 3)
+        .map((entry: JournalEntry) => ({
+          date: entry.date ? new Date(entry.date).toLocaleString() : '',
+          text: entry.content.length > 50
+            ? entry.content.substring(0, 50) + '...'
+            : entry.content,
+          emoji: '📝'
+      }));
+    } else {
+      // Clear the array so our template can display the static message
+      this.recentEntries = [];
     }
-  ];
+  },
+  error => {
+    console.error('Error fetching recent journal entries', error);
+    this.recentEntries = [];
+  }
+);
+  }
 }

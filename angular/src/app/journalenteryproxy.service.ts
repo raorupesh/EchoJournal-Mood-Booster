@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface JournalEntry {
   userId?: string;
@@ -13,7 +13,7 @@ export interface JournalEntry {
   providedIn: 'root'
 })
 export class JournalenteryproxyService {
-  private apiUrl = '/api/journal'; // This will be proxied to your MongoDB backend
+  private apiUrl = 'http://localhost:8080/api/v1/journal/'; // This will be proxied to your MongoDB backend
 
   constructor(private http: HttpClient) { }
   
@@ -21,8 +21,17 @@ export class JournalenteryproxyService {
     return this.http.post(this.apiUrl, entry);
   }
   
-  getRecentEntries(limit: number = 5): Observable<any> {
-    return this.http.get(`${this.apiUrl}/recent?limit=${limit}`);
+  // Calls the recent journal entries endpoint. Adjust response type as per your API.
+  getRecentEntries(): Observable<{ success: boolean, entries: JournalEntry[] }> {
+    return this.http.get<{ success: boolean, data: JournalEntry[] }>(`${this.apiUrl}recent`)
+      .pipe(
+        // Map 'data' to 'entries' to match the expected return type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map((response: any) => ({
+          success: response.success,
+          entries: response.data
+        }))
+      );
   }
   
   getAllEntries(): Observable<any> {

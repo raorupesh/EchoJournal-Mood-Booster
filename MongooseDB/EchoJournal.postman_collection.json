@@ -45,7 +45,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": 1,\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-17T12:00:00Z\"\n}"
+							"raw": "{\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-17T12:00:00Z\"\n}"
 						},
 						"url": "http://localhost:8080/api/v1/journal/",
 						"description": "Create a new journal entry"
@@ -130,7 +130,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": 1,\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"people\": [\"coworkers\", \"manager\"],\n    \"place\": [\"office\", \"meeting room\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
+							"raw": "{\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"people\": [\"coworkers\", \"manager\"],\n    \"place\": [\"office\", \"meeting room\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
 						},
 						"url": "http://localhost:8080/api/v1/emotion/",
 						"description": "Create a new emotion entry"

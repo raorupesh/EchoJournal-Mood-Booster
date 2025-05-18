@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
 export interface JournalEntry {
+  id?: string;
   userId?: string;
   content: string;
   feelings: string[];
@@ -33,20 +34,20 @@ export class JournalenteryproxyService {
         }))
       );
   }
-  
-  getAllEntries(): Observable<any> {
-    return this.http.get(this.apiUrl);
+
+  getAllEntries(): Observable<{ success: boolean, entries: JournalEntry[] }> {
+    return this.http.get<{ success: boolean, entries: JournalEntry[] }>(`${this.apiUrl}all`);
   }
   
-  getEntryById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  getEntryById(id: string): Observable<{ success: boolean, data: JournalEntry }> {
+    return this.http.get<{ success: boolean, data: JournalEntry }>(`${this.apiUrl}${id}`);
   }
   
   deleteEntry(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}${id}`);
   }
   
   updateEntry(id: string, entry: Partial<JournalEntry>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, entry);
+    return this.http.put(`${this.apiUrl}${id}`, entry);
   }
 }

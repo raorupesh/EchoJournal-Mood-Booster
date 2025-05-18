@@ -1,0 +1,31 @@
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.journal-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.badge {
+  padding: 0.5em 0.8em;
+  font-weight: 500;
+}
+
+.card-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+  background: white;
+}

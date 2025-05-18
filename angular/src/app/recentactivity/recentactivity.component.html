@@ -9,10 +9,16 @@
           <span class="emoji">{{entry.emoji}}</span>
         </div>
         <div class="activity-content">
-          <div class="activity-date text-muted small mb-1">{{entry.date}}</div>
+          <div class="activity-date text-muted small mb-2">{{entry.date}}</div>
           <div class="activity-text">{{entry.text}}</div>
         </div>
       </div>
+    </div>
+    <div class="text-center my-3">
+      <a [routerLink]="['/journalhistory']" class="btn btn-outline-primary btn-md d-inline-flex align-items-center mx-auto">
+        <i class="bi bi-journal-text me-2"></i>
+        View All
+      </a>
     </div>
   </ng-container>
   

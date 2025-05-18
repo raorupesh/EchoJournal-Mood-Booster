@@ -1,0 +1,74 @@
+<div class="container py-4">
+    <!-- Back button -->
+    <div class="row my-4">
+        <div class="col">
+            <a routerLink="/dashboard" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="text-primary">Journal History</h2>
+            <p class="text-muted">Review your past journal entries</p>
+        </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="row" *ngIf="loading">
+        <div class="col text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your journal entries...</p>
+        </div>
+    </div>
+
+    <!-- Error state -->
+    <div class="row" *ngIf="error && !loading">
+        <div class="col">
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Failed to load journal entries. Please try again later.
+            </div>
+        </div>
+    </div>
+
+    <!-- No entries state -->
+    <div class="row" *ngIf="!loading && !error && journalEntries.length === 0">
+        <div class="col">
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                You haven't created any journal entries yet.
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal entries as cards -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" *ngIf="!loading && !error && journalEntries.length > 0">
+        <div class="col" *ngFor="let entry of journalEntries">
+            <div class="card h-100 shadow-sm hover-shadow" [routerLink]="['/journal', entry.id]" style="cursor: pointer;">
+                <div class="card-header bg-light">
+                    <div class="">
+                        <span class="text-primary fw-bold">{{ formatDate(entry.date) }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ entry.content | slice:0:120 }}{{ entry.content.length > 120 ? '...' : '' }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex flex-wrap gap-1">
+                        <span *ngFor="let feeling of entry.feelings" 
+                            class="badge bg-secondary">
+                            {{ feeling }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add some spacing at the bottom for mobile -->
+    <div class="pb-4"></div>
+</div>

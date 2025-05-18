@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { JournalEntry, JournalenteryproxyService } from '../journalenteryproxy.service';
 
 interface ActivityEntry {
@@ -11,7 +12,7 @@ interface ActivityEntry {
 @Component({
   selector: 'app-recentactivity',
   standalone: true, // Required if using `imports` directly
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './recentactivity.component.html',
   styleUrls: ['./recentactivity.component.css']
 })

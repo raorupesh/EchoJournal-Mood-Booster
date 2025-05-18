@@ -1,0 +1,55 @@
+/* Card styling */
+.hover-shadow:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+  transition: all 0.3s ease;
+}
+
+.card {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+  cursor: pointer;
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background-color: rgba(248, 249, 250, 0.7);
+}
+
+.card-footer {
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding: 0.75rem 1rem;
+}
+
+/* Make sure content doesn't overflow */
+.card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Styling for the mood badges */
+.badge {
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  white-space: normal;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .card-header, .card-body, .card-footer {
+    padding: 0.75rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+}

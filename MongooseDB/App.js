@@ -31,10 +31,56 @@ class App {
             next();
         });
     }
+    /**
+     * Initializes and sets up all application routes for journal and emotion entries.
+     *
+     * Routes:
+     * - // Create new journal entry
+     *   POST /api/v1/journal
+     *   Creates a new journal entry for a user.
+     *
+     * - // Get recent journal entries
+     *   GET /api/v1/journal/recent
+     *   Retrieves the most recent journal entries for a user.
+     *
+     * - // Get all journal entries (paginated)
+     *   GET /api/v1/journal/all
+     *   Retrieves all journal entries for a user with pagination support.
+     *
+     * - // Get a specific journal entry by ID
+     *   GET /api/v1/journal/:id
+     *   Retrieves a specific journal entry by its ID for a user.
+     *
+     * - // Create new emotion entry
+     *   POST /api/v1/emotion
+     *   Creates a new emotion entry for a user.
+     *
+     * - // Get monthly emotion data
+     *   GET /api/v1/emotion/monthly
+     *   Retrieves aggregated monthly emotion data for a user.
+     *
+     * - // Get all emotion entries
+     *   GET /api/v1/emotion/all
+     *   Retrieves all emotion entries, optionally filtered by user.
+     *
+     * - // Serve index.html at root
+     *   GET /
+     *   Serves the main index.html file.
+     *
+     * - // Serve static JSON files
+     *   Serves static files from /app/json at /app/json/
+     *
+     * - // Serve static images
+     *   Serves static files from /img at /images
+     *
+     * - // Serve static pages
+     *   Serves static files from /pages at root
+     */
     routes() {
         let router = express.Router();
         // Journal Entry routes
-        router.post('/app/journal/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        // Create new journal entry
+        router.post('/api/v1/journal', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const entry = yield this.JournalEntries.createJournalEntry({
                     userId: req.body.userId || 1,
@@ -49,9 +95,10 @@ class App {
                 res.status(500).json({ success: false, message: 'Error creating journal entry' });
             }
         }));
-        router.get('/app/journal/recent/:userId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v1/journal/recent', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const entries = yield this.JournalEntries.getRecentJournalEntries(parseInt(req.params.userId));
+                const userId = parseInt(req.query.userId) || 1;
+                const entries = yield this.JournalEntries.getRecentJournalEntries(userId);
                 res.status(200).json({ success: true, data: entries });
             }
             catch (e) {
@@ -59,11 +106,12 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching recent journal entries' });
             }
         }));
-        router.get('/app/journal/all/:userId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v1/journal/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
+                const userId = parseInt(req.query.userId) || 1;
                 const page = parseInt(req.query.page) || 1;
                 const limit = parseInt(req.query.limit) || 10;
-                const result = yield this.JournalEntries.getAllJournalEntries(parseInt(req.params.userId), page, limit);
+                const result = yield this.JournalEntries.getAllJournalEntries(userId, page, limit);
                 res.status(200).json(Object.assign({ success: true }, result));
             }
             catch (e) {
@@ -71,9 +119,10 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching all journal entries' });
             }
         }));
-        router.get('/app/journal/:id/:userId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const entry = yield this.JournalEntries.getJournalEntry(req.params.id, parseInt(req.params.userId));
+                const userId = parseInt(req.query.userId) || 1;
+                const entry = yield this.JournalEntries.getJournalEntry(req.params.id, userId);
                 if (!entry) {
                     return res.status(404).json({ success: false, message: 'Journal entry not found' });
                 }
@@ -85,7 +134,7 @@ class App {
             }
         }));
         // Emotion Entry routes
-        router.post('/app/emotion/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.post('/api/v1/emotion', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const entry = yield this.EmotionEntries.createEmotionEntry({
                     userId: req.body.userId || 1,
@@ -102,9 +151,10 @@ class App {
                 res.status(500).json({ success: false, message: 'Error creating emotion entry' });
             }
         }));
-        router.get('/app/emotion/monthly/:userId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v1/emotion/monthly', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const data = yield this.EmotionEntries.getMonthlyEmotions(parseInt(req.params.userId));
+                const userId = parseInt(req.query.userId) || 1;
+                const data = yield this.EmotionEntries.getMonthlyEmotions(userId);
                 res.status(200).json({ success: true, data });
             }
             catch (e) {
@@ -112,20 +162,14 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching monthly emotion data' });
             }
         }));
-        router.get('/app/emotion/all/:userId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v1/emotion/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const data = yield this.EmotionEntries.getAllEmotionEntries(parseInt(req.params.userId));
+                // Optional: if no userId provided, return all entries
+                const userIdParam = req.query.userId;
+                const data = userIdParam
+                    ? yield this.EmotionEntries.getAllEmotionEntries(parseInt(userIdParam))
+                    : yield this.EmotionEntries.getAllEmotionEntries();
                 res.status(200).json({ success: true, data });
-            }
-            catch (e) {
-                console.error(e);
-                res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
-            }
-        }));
-        router.get('/app/emotion/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const data = yield this.EmotionEntries.getAllEmotionEntries();
-                res.status(200).json({ success: true, data, });
             }
             catch (e) {
                 console.error(e);

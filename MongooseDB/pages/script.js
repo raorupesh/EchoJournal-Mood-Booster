@@ -125,7 +125,7 @@ function retrieveJournalEntriesFromServer() {
 			}
 		}
 	}
-	xmlhttp.open("GET", '/app/journal/all/' + userId + '?limit=10&page=1', true);
+	xmlhttp.open("GET", '/api/v1/journal/all?userId=' + userId + '&limit=10&page=1', true);
 	xmlhttp.send();
 }
 
@@ -148,7 +148,7 @@ function retrieveEmotionEntriesFromServer() {
 			}
 		}
 	}
-	xmlhttp.open("GET", '/app/emotion/monthly/' + userId, true);
+	xmlhttp.open("GET", '/api/v1/emotion/monthly?userId=' + userId, true);
 	xmlhttp.send();
 }
 
@@ -192,7 +192,7 @@ function createJournalEntry() {
 		}
 	}
 	
-	xmlhttp.open("POST", '/app/journal/', true);
+	xmlhttp.open("POST", '/api/v1/journal', true);
 	xmlhttp.setRequestHeader('Content-Type', 'application/json');
 	xmlhttp.send(JSON.stringify({
 		userId: 1,  // TODO: In production, get userId from cookies or session storage
@@ -291,7 +291,7 @@ function createEmotionEntry() {
 			}
 		}
 	}
-	xmlhttp.open("POST", '/app/emotion/', true);
+	xmlhttp.open("POST", '/api/v1/emotion', true);
 	xmlhttp.setRequestHeader('Content-Type', 'application/json');
 	xmlhttp.send(JSON.stringify(emotionData));
 }
@@ -483,7 +483,8 @@ function retrieveRecentActivityForDashboard(userId) {
 				}
 			}
 		}
-		xmlhttp.open("GET", '/app/journal/all/' + userId + '?limit=5&page=1', true);
+		// In retrieveRecentActivityForDashboard, update the GET endpoint to use the recent entries route:
+xmlhttp.open("GET", '/api/v1/journal/recent?userId=' + userId, true);
 		xmlhttp.send();
 	} catch (e) {
 		console.error('Error in retrieveRecentActivityForDashboard:', e);
@@ -562,7 +563,7 @@ function fetchEmotionDataForGraph(userId) {
 			}
 		}
 	}
-	xmlhttp.open("GET", '/app/emotion/monthly/' + userId, true);
+	xmlhttp.open("GET", '/api/v1/emotion/monthly?userId=' + userId, true);
 	xmlhttp.send();
 }
 
@@ -781,7 +782,7 @@ function checkApiAvailability() {
 		// TODO: In production, get userId from cookies or session storage
 	var userId = 1; // Default user ID for development
 	// Try to fetch emotions API - just to check if server is responding
-	xhr.open('GET', '/app/emotion/monthly/' + userId, true);
+	xhr.open('GET', '/api/v1/emotion/monthly?userId=' + userId, true);
 	xhr.send();
 }
 
@@ -845,6 +846,6 @@ function showJournalEntryModal(entryId) {
 	};
 	
 	// Make the API request to get full journal entry details
-	xmlhttp.open("GET", "/app/journal/" + entryId + "/" + userId, true);
+	xmlhttp.open("GET", "/api/v1/journal/" + entryId + "?userId=" + userId, true);
 	xmlhttp.send();
 }

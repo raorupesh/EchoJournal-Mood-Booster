@@ -23,11 +23,57 @@ class App {
       next();
     });
   }
+  /**
+   * Initializes and sets up all application routes for journal and emotion entries.
+   *
+   * Routes:
+   * - // Create new journal entry
+   *   POST /api/v1/journal
+   *   Creates a new journal entry for a user.
+   *
+   * - // Get recent journal entries
+   *   GET /api/v1/journal/recent
+   *   Retrieves the most recent journal entries for a user.
+   *
+   * - // Get all journal entries (paginated)
+   *   GET /api/v1/journal/all
+   *   Retrieves all journal entries for a user with pagination support.
+   *
+   * - // Get a specific journal entry by ID
+   *   GET /api/v1/journal/:id
+   *   Retrieves a specific journal entry by its ID for a user.
+   *
+   * - // Create new emotion entry
+   *   POST /api/v1/emotion
+   *   Creates a new emotion entry for a user.
+   *
+   * - // Get monthly emotion data
+   *   GET /api/v1/emotion/monthly
+   *   Retrieves aggregated monthly emotion data for a user.
+   *
+   * - // Get all emotion entries
+   *   GET /api/v1/emotion/all
+   *   Retrieves all emotion entries, optionally filtered by user.
+   *
+   * - // Serve index.html at root
+   *   GET /
+   *   Serves the main index.html file.
+   *
+   * - // Serve static JSON files
+   *   Serves static files from /app/json at /app/json/
+   *
+   * - // Serve static images
+   *   Serves static files from /img at /images
+   *
+   * - // Serve static pages
+   *   Serves static files from /pages at root
+   */
   private routes(): void {
     let router = express.Router();
 
     // Journal Entry routes
-    router.post('/app/journal/', async (req, res) => {
+    // Create new journal entry
+    router.post('/api/v1/journal', async (req, res) => {
       try {
         const entry = await this.JournalEntries.createJournalEntry({
           userId: req.body.userId || 1,
@@ -41,32 +87,35 @@ class App {
         res.status(500).json({ success: false, message: 'Error creating journal entry' });
       }
     });
-
-    router.get('/app/journal/recent/:userId', async (req, res) => {
+ 
+    router.get('/api/v1/journal/recent', async (req, res) => {
       try {
-        const entries = await this.JournalEntries.getRecentJournalEntries(parseInt(req.params.userId));
+        const userId = parseInt(req.query.userId as string) || 1;
+        const entries = await this.JournalEntries.getRecentJournalEntries(userId);
         res.status(200).json({ success: true, data: entries });
       } catch (e) {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error fetching recent journal entries' });
       }
     });
-
-    router.get('/app/journal/all/:userId', async (req, res) => {
+ 
+    router.get('/api/v1/journal/all', async (req, res) => {
       try {
+        const userId = parseInt(req.query.userId as string) || 1;
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
-        const result = await this.JournalEntries.getAllJournalEntries(parseInt(req.params.userId), page, limit);
+        const result = await this.JournalEntries.getAllJournalEntries(userId, page, limit);
         res.status(200).json({ success: true, ...result });
       } catch (e) {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error fetching all journal entries' });
       }
     });
-
-    router.get('/app/journal/:id/:userId', async (req, res) => {
+ 
+    router.get('/api/v1/journal/:id', async (req, res) => {
       try {
-        const entry = await this.JournalEntries.getJournalEntry(req.params.id, parseInt(req.params.userId));
+        const userId = parseInt(req.query.userId as string) || 1;
+        const entry = await this.JournalEntries.getJournalEntry(req.params.id, userId);
         if (!entry) {
           return res.status(404).json({ success: false, message: 'Journal entry not found' });
         }
@@ -76,9 +125,9 @@ class App {
         res.status(500).json({ success: false, message: 'Error fetching journal entry' });
       }
     });
-
+ 
     // Emotion Entry routes
-    router.post('/app/emotion/', async (req, res) => {
+    router.post('/api/v1/emotion', async (req, res) => {
       try {
         const entry = await this.EmotionEntries.createEmotionEntry({
           userId: req.body.userId || 1,
@@ -94,44 +143,39 @@ class App {
         res.status(500).json({ success: false, message: 'Error creating emotion entry' });
       }
     });
-
-    router.get('/app/emotion/monthly/:userId', async (req, res) => {
+ 
+    router.get('/api/v1/emotion/monthly', async (req, res) => {
       try {
-        const data = await this.EmotionEntries.getMonthlyEmotions(parseInt(req.params.userId));
+        const userId = parseInt(req.query.userId as string) || 1;
+        const data = await this.EmotionEntries.getMonthlyEmotions(userId);
         res.status(200).json({ success: true, data });
       } catch (e) {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error fetching monthly emotion data' });
       }
     });
-
-    router.get('/app/emotion/all/:userId', async (req, res) => {
+ 
+    router.get('/api/v1/emotion/all', async (req, res) => {
       try {
-        const data = await this.EmotionEntries.getAllEmotionEntries(parseInt(req.params.userId));
+        // Optional: if no userId provided, return all entries
+        const userIdParam = req.query.userId as string;
+        const data = userIdParam
+          ? await this.EmotionEntries.getAllEmotionEntries(parseInt(userIdParam))
+          : await this.EmotionEntries.getAllEmotionEntries();
         res.status(200).json({ success: true, data });
       } catch (e) {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
       }
     });
-
-    router.get('/app/emotion/all', async (req, res) => {
-      try {
-        const data = await this.EmotionEntries.getAllEmotionEntries();
-        res.status(200).json({ success: true, data, });
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
-      }
-    })
-
+ 
     // Add route for root path to serve index.html
     router.get('/', (req, res) => {
       res.sendFile('index.html', { root: __dirname + '/pages' });
     });
-
+ 
     this.expressApp.use('/', router);
-
+ 
     this.expressApp.use('/app/json/', express.static(__dirname + '/app/json'));
     this.expressApp.use('/images', express.static(__dirname + '/img'));
     this.expressApp.use('/', express.static(__dirname + '/pages'));

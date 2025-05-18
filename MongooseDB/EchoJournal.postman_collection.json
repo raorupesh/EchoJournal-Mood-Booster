@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "368f55ab-8615-4a9f-82a2-a45e57803075",
+		"_postman_id": "aed26284-a826-4f27-bbb9-7f272b63a602",
 		"name": "EchoJournal",
 		"description": "API collection for testing Journal and Emotion entries",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "19201630"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "44626732"
 	},
 	"item": [
 		{
@@ -21,7 +21,7 @@
 									"const jsonResponse = pm.response.json();\r",
 									"\r",
 									"// Extract the _id\r",
-									"const JournalId = jsonResponse.data._id;\r",
+									"const JournalId = jsonResponse.data.id;\r",
 									"\r",
 									"// Store the _id in an environment variable\r",
 									"pm.environment.set(\"JournalId\", JournalId);\r",
@@ -45,21 +45,9 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": 1,\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-04T12:00:00Z\"\n}"
+							"raw": "{\n    \"userId\": 1,\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-17T12:00:00Z\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/app/journal/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"journal",
-								""
-							]
-						},
+						"url": "http://localhost:8080/api/v1/journal/",
 						"description": "Create a new journal entry"
 					},
 					"response": []
@@ -69,20 +57,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/app/journal/recent/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"journal",
-								"recent",
-								"1"
-							]
-						},
+						"url": "http://localhost:8080/api/v1/journal/recent/",
 						"description": "Get recent journal entries for a user"
 					},
 					"response": []
@@ -93,17 +68,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/app/journal/all/1?page=1&limit=10",
+							"raw": "http://localhost:8080/api/v1/journal/all/?page=1&limit=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"app",
+								"api",
+								"v1",
 								"journal",
 								"all",
-								"1"
+								""
 							],
 							"query": [
 								{
@@ -122,23 +98,17 @@
 				},
 				{
 					"name": "Get Specific Journal Entry",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/app/journal/{{JournalId}}/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"journal",
-								"{{JournalId}}",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": "http://localhost:8080/api/v1/journal/{{id}}"
 					},
 					"response": []
 				}
@@ -162,19 +132,7 @@
 							"mode": "raw",
 							"raw": "{\n    \"userId\": 1,\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"people\": [\"coworkers\", \"manager\"],\n    \"place\": [\"office\", \"meeting room\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/app/emotion/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"emotion",
-								""
-							]
-						},
+						"url": "http://localhost:8080/api/v1/emotion/",
 						"description": "Create a new emotion entry"
 					},
 					"response": []
@@ -184,20 +142,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/app/emotion/monthly/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"emotion",
-								"monthly",
-								"1"
-							]
-						},
+						"url": "http://localhost:8080/api/v1/emotion/monthly",
 						"description": "Get monthly emotion data for a user"
 					},
 					"response": []
@@ -207,20 +152,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/app/emotion/all/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"app",
-								"emotion",
-								"all",
-								"1"
-							]
-						},
+						"url": "http://localhost:8080/api/v1/emotion/all",
 						"description": "Get all emotion entries for a user"
 					},
 					"response": []

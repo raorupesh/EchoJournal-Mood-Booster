@@ -167,12 +167,6 @@ runTestFile.cmd
 
 ---
 
-## 📄 License
-
-MIT License
-
----
-
 **EchoJournal - Mood Booster**  
 Helping you reflect, grow, and boost your mood, one entry at a time.
 

@@ -12,8 +12,8 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardpageComponent },
   { path: 'journalhistory', component: JournalhistoryComponent },
   { path: 'journal/:id', component: JournalpageComponent },
-  { path: 'journalenteries', component: LogjournalComponent },
-  { path: 'emotionalenteries', component: MoodechoComponent },
+  { path: 'logjournal', component: LogjournalComponent },
+  { path: 'moodecho', component: MoodechoComponent },
   { path: 'myaffirmations', component: MyaffirmationsComponent },
   { path: 'welcome', component: WelcomepageComponent },
   { path: '**', redirectTo: 'welcome' }

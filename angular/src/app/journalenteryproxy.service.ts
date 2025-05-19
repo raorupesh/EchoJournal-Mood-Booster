@@ -17,9 +17,9 @@ export class JournalenteryproxyService {
   private apiUrl = 'http://localhost:8080/api/v1/journal/'; // This will be proxied to your MongoDB backend
 
   constructor(private http: HttpClient) { }
-  
-  createJournalEntry(entry: JournalEntry): Observable<any> {
-    return this.http.post(this.apiUrl, entry);
+
+  createJournalEntry(entry: JournalEntry): Observable<{ success: boolean, data: JournalEntry }> {
+    return this.http.post<{ success: boolean, data: JournalEntry }>(this.apiUrl, entry);
   }
   
   // Calls the recent journal entries endpoint. Adjust response type as per your API.

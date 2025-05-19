@@ -17,12 +17,12 @@ export class DashboardpageComponent {
 
   openMoodEcho(): void {
     console.log('Mood Echo clicked');
-    this.router.navigate(['/emotionalenteries']);
+    this.router.navigate(['/moodecho']);
   }
 
   openLogJournal(): void {
     console.log('Log Journal clicked');
-    this.router.navigate(['/journalenteries']);
+    this.router.navigate(['/logjournal']);
   }
 
   openAffirmations(): void {

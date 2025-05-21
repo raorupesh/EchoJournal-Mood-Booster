@@ -14,7 +14,7 @@ export interface JournalEntry {
   providedIn: 'root'
 })
 export class JournalenteryproxyService {
-  private apiUrl = 'http://localhost:8080/api/v1/journal/'; // This will be proxied to your MongoDB backend
+  private apiUrl = 'http://localhost:8080/api/v1/journal/'; 
 
   constructor(private http: HttpClient) { }
 
@@ -22,12 +22,10 @@ export class JournalenteryproxyService {
     return this.http.post<{ success: boolean, data: JournalEntry }>(this.apiUrl, entry);
   }
   
-  // Calls the recent journal entries endpoint. Adjust response type as per your API.
+  
   getRecentEntries(): Observable<{ success: boolean, entries: JournalEntry[] }> {
     return this.http.get<{ success: boolean, data: JournalEntry[] }>(`${this.apiUrl}recent`)
       .pipe(
-        // Map 'data' to 'entries' to match the expected return type
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         map((response: any) => ({
           success: response.success,
           entries: response.data

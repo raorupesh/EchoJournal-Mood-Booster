@@ -27,7 +27,6 @@ export class MoodechoComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // Initialization logic if needed
   }
 
   updateEmoji(value: number): void {

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MoodechoComponent } from './moodecho/moodecho.component';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { LogjournalComponent } from './logjournal/logjournal.component';
+import { JournalenteryproxyService } from './journalenteryproxy.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { LogjournalComponent } from './logjournal/logjournal.component';
     RouterModule.forRoot(routes),
     FormsModule,
   ],
-  providers: [],
+  providers: [JournalenteryproxyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

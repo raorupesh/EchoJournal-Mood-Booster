@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "aed26284-a826-4f27-bbb9-7f272b63a602",
+		"_postman_id": "273853d4-1789-478f-8430-0e502178acd2",
 		"name": "EchoJournal",
 		"description": "API collection for testing Journal and Emotion entries",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "44626732"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19201630"
 	},
 	"item": [
 		{
@@ -47,7 +47,20 @@
 							"mode": "raw",
 							"raw": "{\n    \"content\": \"Today was a productive day. I managed to complete all my tasks and had time for a relaxing evening.\",\n    \"feelings\": [\"productive\", \"satisfied\", \"content\"],\n    \"date\": \"2025-05-17T12:00:00Z\"\n}"
 						},
-						"url": "http://localhost:8080/api/v1/journal/",
+						"url": {
+							"raw": "http://localhost:8080/api/v1/journal/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"journal",
+								""
+							]
+						},
 						"description": "Create a new journal entry"
 					},
 					"response": []
@@ -57,7 +70,21 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/journal/recent/",
+						"url": {
+							"raw": "http://localhost:8080/api/v1/journal/recent/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"journal",
+								"recent",
+								""
+							]
+						},
 						"description": "Get recent journal entries for a user"
 					},
 					"response": []
@@ -108,7 +135,46 @@
 							"mode": "file",
 							"file": {}
 						},
-						"url": "http://localhost:8080/api/v1/journal/{{id}}"
+						"url": {
+							"raw": "http://localhost:8080/api/v1/journal/{{id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"journal",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Specific Journal Entry",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/journal/{{id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"journal",
+								"{{id}}"
+							]
+						}
 					},
 					"response": []
 				}
@@ -132,7 +198,20 @@
 							"mode": "raw",
 							"raw": "{\n    \"moodScore\": 7,\n    \"feelings\": [\"calm\", \"focused\", \"relaxed\"],\n    \"people\": [\"coworkers\", \"manager\"],\n    \"place\": [\"office\", \"meeting room\"],\n    \"date\": \"2025-05-04T14:30:00Z\"\n}"
 						},
-						"url": "http://localhost:8080/api/v1/emotion/",
+						"url": {
+							"raw": "http://localhost:8080/api/v1/emotion/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"emotion",
+								""
+							]
+						},
 						"description": "Create a new emotion entry"
 					},
 					"response": []
@@ -142,7 +221,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/emotion/monthly",
+						"url": {
+							"raw": "http://localhost:8080/api/v1/emotion/monthly",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"emotion",
+								"monthly"
+							]
+						},
 						"description": "Get monthly emotion data for a user"
 					},
 					"response": []
@@ -152,7 +244,20 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/api/v1/emotion/all",
+						"url": {
+							"raw": "http://localhost:8080/api/v1/emotion/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"emotion",
+								"all"
+							]
+						},
 						"description": "Get all emotion entries for a user"
 					},
 					"response": []

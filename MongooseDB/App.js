@@ -138,6 +138,22 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching journal entry' });
             }
         }));
+        // Add DELETE endpoint for journal entries
+        router.delete('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth, for now hardcoded 1
+            const userId = 1;
+            try {
+                const result = yield this.JournalEntries.deleteJournalEntry(req.params.id);
+                if (!result) {
+                    return res.status(404).json({ success: false, message: 'Journal entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Journal entry deleted successfully' });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error deleting journal entry' });
+            }
+        }));
         // Emotion Entry routes
         router.post('/api/v1/emotion', (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from auth , for now hardcoded 1

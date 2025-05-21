@@ -27,6 +27,21 @@ describe('Journal Entry API Tests', function () {
             });
     });
 
+    after(function(done) {
+        if (testEntryId) {
+            chai.request(BASE_URL)
+                .delete(`/api/v1/journal/${testEntryId}`)
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('success', true);
+                    console.log(`Test cleanup: Deleted journal entry ${testEntryId}`);
+                    done();
+                });
+        } else {
+            done();
+        }
+    });
+
     describe('GET /api/v1/journal/:id', function () {
         it('Should return a journal entry with expected properties for entry id', function (done) {
             chai.request(BASE_URL)

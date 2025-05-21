@@ -27,21 +27,6 @@ describe('Journal Entry API Tests', function () {
             });
     });
 
-    after(function(done) {
-        if (testEntryId) {
-            chai.request(BASE_URL)
-                .delete(`/api/v1/journal/${testEntryId}`)
-                .end(function(err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.have.property('success', true);
-                    console.log(`Test cleanup: Deleted journal entry ${testEntryId}`);
-                    done();
-                });
-        } else {
-            done();
-        }
-    });
-
     describe('GET /api/v1/journal/:id', function () {
         let response;
         let journalEntry;
@@ -128,5 +113,17 @@ describe('Journal Entry API Tests', function () {
                 expect(entry).to.have.property('updatedAt');
             });
         });
+    });
+
+    // Add cleanup after all tests
+    after(function(done) {
+        chai.request(BASE_URL)
+            .delete(`/api/v1/journal/${testEntryId}`)
+            .end(function (err, res) {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('success', true);
+                expect(res.body).to.have.property('message', 'Journal entry deleted successfully');
+                done();
+            });
     });
 });

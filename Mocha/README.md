@@ -12,6 +12,8 @@ Take the latest Pull request(Mandatory).
 2. Run ./runTestFile.cmd in command line in New Terminal.
 3. Look for all test cases satisfied and completed successfully.
 
+Note: Backend Express Server and Database should be running to satisfy the test case.
+
 For more details on how to configure and use mocha go to:
 http://mochajs.org/
 

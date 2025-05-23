@@ -11,7 +11,7 @@ interface ActivityEntry {
 
 @Component({
   selector: 'app-recentactivity',
-  standalone: true, // Required if using `imports` directly
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './recentactivity.component.html',
   styleUrls: ['./recentactivity.component.css']
@@ -37,7 +37,6 @@ this.journalService.getRecentEntries().subscribe(
           emoji: '📝'
       }));
     } else {
-      // Clear the array so our template can display the static message
       this.recentEntries = [];
     }
   },

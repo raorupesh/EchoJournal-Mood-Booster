@@ -28,7 +28,6 @@ export class MoodechoComponent implements OnInit {
   constructor(private emotionService: EmotionentryproxyService, private router: Router) {}
 
   ngOnInit(): void {
-    // Initialization logic if needed
   }
 
   updateEmoji(value: number): void {

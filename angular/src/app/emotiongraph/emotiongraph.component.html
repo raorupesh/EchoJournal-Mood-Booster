@@ -2,8 +2,19 @@
   <h3 class="text-success mb-1">Emotion Tracking</h3>
   <p class="text-muted small mb-4">Your emotional journey over time</p>
   
-  <div class="chart-container">
-    <canvas id="emotionChart"></canvas>
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading your emotion data...</p>
+  </div>
+  
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-warning">
+    {{ errorMessage }}
+  </div>
+  
+  <div class="chart-container" *ngIf="!isLoading" style="position: relative; height: 300px;">
+    <canvas id="emotionChart" #emotionChart></canvas>
   </div>
   
 </div>

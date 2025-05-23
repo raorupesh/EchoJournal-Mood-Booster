@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { JournalEntry, JournalenteryproxyService } from '../journalenteryproxy.service';
+import { JournalEntry, JournalentryproxyService } from '../journalentryproxy.service';
 
 interface ActivityEntry {
   date: string;
@@ -20,7 +20,7 @@ export class RecentactivityComponent implements OnInit {
   recentEntries: ActivityEntry[] = [];
   noRecentEntriesMessage = 'No recent entries available.';
 
-  constructor(private journalService: JournalenteryproxyService) {}
+  constructor(private journalService: JournalentryproxyService) {}
 
   ngOnInit(): void {
 this.journalService.getRecentEntries().subscribe(

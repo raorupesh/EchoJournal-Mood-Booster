@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { JournalenteryproxyService, JournalEntry } from '../journalenteryproxy.service';
+import { JournalentryproxyService, JournalEntry } from '../journalentryproxy.service';
 
 @Component({
   selector: 'app-journalhistory',
@@ -15,7 +15,7 @@ export class JournalhistoryComponent implements OnInit {
   loading = true;
   error = false;
   
-  constructor(private journalService: JournalenteryproxyService) {}
+  constructor(private journalService: JournalentryproxyService) {}
   
   ngOnInit(): void {
     this.loadAllEntries();

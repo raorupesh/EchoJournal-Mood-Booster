@@ -1,6 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Chart } from 'chart.js/auto';
+import { Chart, registerables } from 'chart.js/auto';
+import { EmotionentryproxyService, EmotionEntry } from '../emotionentryservice.service';
+
+// Register Chart.js components
+Chart.register(...registerables);
+
+interface ChartEmotion {
+  day: string;
+  emotionTags: string[];
+  intensity: number;
+  date: Date;
+}
 
 @Component({
   selector: 'app-emotiongraph',
@@ -9,38 +20,124 @@ import { Chart } from 'chart.js/auto';
   templateUrl: './emotiongraph.component.html',
   styleUrl: './emotiongraph.component.css'
 })
-export class EmotiongraphComponent implements OnInit {
-  emotions = [
-    { day: 'Mon', emotionTags: ['happy', 'thrilled', 'energetic'], intensity: 7 },
-    { day: 'Tue', emotionTags: ['calm', 'peaceful', 'serene'], intensity: 5 },
-    { day: 'Wed', emotionTags: ['stressed', 'anxious', 'worried'], intensity: 8 },
-    { day: 'Thu', emotionTags: ['focused', 'determined', 'concentrated'], intensity: 6 },
-    { day: 'Fri', emotionTags: ['excited', 'enthusiastic', 'eager'], intensity: 9 },
-    { day: 'Sat', emotionTags: ['relaxed', 'comfortable', 'at ease'], intensity: 4 },
-    { day: 'Sun', emotionTags: ['contented', 'satisfied', 'fulfilled'], intensity: 7 }
-  ];
+export class EmotiongraphComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('emotionChart') chartCanvas!: ElementRef;
+  
+  emotions: ChartEmotion[] = [];
+  chart: Chart | null = null;
+  isLoading: boolean = true;
+  errorMessage: string = '';
 
-  chart: any;
+  constructor(private emotionService: EmotionentryproxyService, private el: ElementRef) {}
 
   ngOnInit() {
-    this.createChart();
+    this.loadEmotionData();
+  }
+
+  ngAfterViewInit() {
+    // If we already have data loaded when the view initializes, create the chart
+    setTimeout(() => {
+      if (!this.isLoading && this.emotions.length > 0 && !this.chart) {
+        this.createChart();
+      }
+    }, 100);
+  }
+
+  ngOnDestroy() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+  }
+
+  loadEmotionData() {
+    this.isLoading = true;
+    
+    // Try the monthly endpoint first
+    this.emotionService.getRecentEntries().subscribe({
+      next: (response) => {
+        if (response.success && response.data && response.data.length > 0) {
+          this.processEmotionData(response.data);
+        } else {
+          this.isLoading = false;
+          this.errorMessage = 'No recent emotion data available.';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Could not load recent emotion data from server.';        
+      }
+    });
+  }
+
+  processEmotionData(entries: EmotionEntry[]) {
+    try {
+      // Transform the API response into our ChartEmotion format
+      this.emotions = entries.map(entry => {
+        // Handle both string dates and Date objects
+        const dateValue = entry.date instanceof Date ? entry.date : new Date(entry.date || Date.now());
+        
+        return {
+          day: dateValue.toLocaleDateString('en-US', { weekday: 'short' }),
+          emotionTags: entry.feelings ,
+          intensity: entry.moodScore,
+          date: dateValue
+        };
+      });
+
+      // Sort by date
+      this.emotions.sort((a, b) => a.date.getTime() - b.date.getTime());
+      
+      this.isLoading = false;
+      
+      // Create or update chart after data is processed and DOM is ready
+        this.createChart();
+    } catch (err) {
+      this.isLoading = false;
+      this.errorMessage = 'Error processing emotion data.';
+    }
   }
 
   createChart() {
-    const ctx = document.getElementById('emotionChart') as HTMLCanvasElement;
-    if (ctx) {
+    if (this.emotions.length === 0) {
+      return;
+    }
+    
+    // Get the canvas element
+    const canvas = document.getElementById('emotionChart') as HTMLCanvasElement;
+    if (!canvas) {
+      // this.errorMessage = 'Cannot find chart canvas element';
+      return;
+    }
+    
+    // If chart already exists, destroy it first
+    if (this.chart) {
+      this.chart.destroy();
+      this.chart = null;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      // this.errorMessage = 'Cannot get 2D context from canvas';
+      return;
+    }
+    
+    try {
+      // Create new chart
       this.chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: this.emotions.map(e => e.day),
           datasets: [{
-            label: '',
+            label: 'Mood Score',
             data: this.emotions.map(e => e.intensity),
             borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.1)',
             tension: 0.25,
-            fill: false,
-            pointRadius: 2,
-            pointBackgroundColor: '#4CAF50'
+            fill: true,
+            pointRadius: 5,
+            pointBackgroundColor: '#4CAF50',
+            pointHoverRadius: 7,
+            pointHoverBackgroundColor: '#2E7D32'
           }]
         },
         options: {
@@ -52,12 +149,17 @@ export class EmotiongraphComponent implements OnInit {
             },
             tooltip: {
               callbacks: {
-                label: (context: any) => {
+                title: (tooltipItems) => {
+                  const index = tooltipItems[0].dataIndex;
+                  const emotion = this.emotions[index];
+                  return emotion.date.toLocaleDateString();
+                },
+                label: (context) => {
                   const dataIndex = context.dataIndex;
                   const emotion = this.emotions[dataIndex];
                   return [
-                    emotion.intensity.toString(),
-                    emotion.emotionTags.join(', ')
+                    `Mood: ${emotion.intensity}`,
+                    `Feelings: ${emotion.emotionTags.join(', ')}`
                   ];
                 }
               }
@@ -69,10 +171,13 @@ export class EmotiongraphComponent implements OnInit {
               max: 10,
               grid: {
                 display: true,
-                color: 'rgba(0, 0, 0, 0.05)'  // Lighter grid lines
+                color: 'rgba(0, 0, 0, 0.05)'
               },
               ticks: {
-                padding: 10
+                padding: 10,
+                callback: function(value) {
+                  return value;
+                }
               },
               border: {
                 display: false
@@ -80,7 +185,7 @@ export class EmotiongraphComponent implements OnInit {
             },
             x: {
               grid: {
-                display: false  // Hide x-axis grid
+                display: false
               },
               ticks: {
                 padding: 10
@@ -92,6 +197,8 @@ export class EmotiongraphComponent implements OnInit {
           }
         }
       });
+    } catch (err) {
+      this.errorMessage = 'Error rendering emotion chart';
     }
   }
 }

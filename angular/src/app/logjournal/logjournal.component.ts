@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { JournalenteryproxyService, JournalEntry } from '../journalenteryproxy.service';
+import { JournalentryproxyService, JournalEntry } from '../journalentryproxy.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,7 +23,7 @@ export class LogjournalComponent {
   errorMessage = '';
   
   constructor(
-    private journalService: JournalenteryproxyService,
+    private journalService: JournalentryproxyService,
     private router: Router
   ) {}
   

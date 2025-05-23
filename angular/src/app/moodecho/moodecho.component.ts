@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EmotionentryproxyService, EmotionEntry } from '../emotionentryservice.service';
 
 @Component({
   selector: 'app-moodecho',
@@ -24,7 +25,7 @@ export class MoodechoComponent implements OnInit {
   errorMessage: string = '';
   isSubmitting: boolean = false;
 
-  constructor() {}
+  constructor(private emotionService: EmotionentryproxyService, private router: Router) {}
 
   ngOnInit(): void {
     // Initialization logic if needed
@@ -68,36 +69,47 @@ export class MoodechoComponent implements OnInit {
         break;
     }
   }
+  
   onSubmit(form: NgForm): void {
     if (form.invalid) {
       return;
     }
 
     this.isSubmitting = true;
-    try {
-      let entries = JSON.parse(localStorage.getItem('moodEntries') || '[]');
-      const newEntry = { 
-        ...this.moodEntry, 
-        timestamp: new Date().toISOString() 
-      };
-      entries.push(newEntry);
-      localStorage.setItem('moodEntries', JSON.stringify(entries));
-      
-      this.successMessage = 'Mood entry saved successfully!';
-      this.errorMessage = '';
-      form.resetForm({ emojiSlider: 5, withWhom: 'friends', location: 'home' });
-      this.emojiDisplay = '😐';
-    } catch (error) {
-      this.errorMessage = 'Error saving mood entry.';
-      this.successMessage = '';
-      console.error('Error on saving mood entry:', error);
-    }
+    
+    // Convert comma-separated feelings to an array
+    const feelingsArray = this.moodEntry.feelings
+      .split(',')
+      .map(feeling => feeling.trim())
+      .filter(feeling => feeling.length > 0);
 
-    this.isSubmitting = false;
+    // Prepare the data in the format expected by the backend
+    const emotionEntry: EmotionEntry = {
+      moodScore: Number(this.moodEntry.emojiSlider),
+      feelings: feelingsArray,
+      people: [this.moodEntry.withWhom],
+      place: [this.moodEntry.location],
+      date: new Date()
+    };
+
+    this.emotionService.createEmotionEntry(emotionEntry).subscribe({
+      next: (response) => {
+        this.successMessage = 'Mood entry saved successfully!';
+        this.errorMessage = '';
+        form.resetForm({ emojiSlider: 5, withWhom: 'friends', location: 'home' });
+        this.emojiDisplay = '😐';
+        this.isSubmitting = false;
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        this.errorMessage = 'Error saving mood entry. Please try again.';
+        this.successMessage = '';
+        this.isSubmitting = false;
+      }
+    });
   }
 
   goBack(): void {
-    window.history.back();
+    this.router.navigate(['/dashboard']);
   }
-
 }

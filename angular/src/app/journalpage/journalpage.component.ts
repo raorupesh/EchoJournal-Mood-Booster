@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { JournalenteryproxyService, JournalEntry } from '../journalenteryproxy.service';
+import { JournalentryproxyService, JournalEntry } from '../journalentryproxy.service';
 
 @Component({
   selector: 'app-journalpage',
@@ -19,7 +19,7 @@ export class JournalpageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private journalService: JournalenteryproxyService
+    private journalService: JournalentryproxyService
   ) {}
   
   ngOnInit(): void {

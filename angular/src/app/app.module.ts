@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DashboardpageComponent } from './dashboardpage/dashboardpage.component';
 import { RecentactivityComponent } from './recentactivity/recentactivity.component';
@@ -11,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { MoodechoComponent } from './moodecho/moodecho.component';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { LogjournalComponent } from './logjournal/logjournal.component';
+import { JournalentryproxyService } from './journalentryproxy.service';
+import { EmotionentryproxyService } from './emotionentryservice.service';
 
 @NgModule({
   declarations: [
@@ -26,8 +29,9 @@ import { LogjournalComponent } from './logjournal/logjournal.component';
     CommonModule,
     RouterModule.forRoot(routes),
     FormsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [JournalentryproxyService, EmotionentryproxyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

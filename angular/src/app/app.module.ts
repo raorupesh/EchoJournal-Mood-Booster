@@ -13,7 +13,7 @@ import { MoodechoComponent } from './moodecho/moodecho.component';
 import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { LogjournalComponent } from './logjournal/logjournal.component';
 import { JournalentryproxyService } from './journalentryproxy.service';
-import { EmotionentryproxyService } from './emotionentryservice.service';
+import { EmotionentryproxyService } from './emotionentryproxy.service';
 
 @NgModule({
   declarations: [

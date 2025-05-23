@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js/auto';
-import { EmotionentryproxyService, EmotionEntry } from '../emotionentryservice.service';
+import { EmotionentryproxyService, EmotionEntry } from '../emotionentryproxy.service';
 
 // Register Chart.js components
 Chart.register(...registerables);

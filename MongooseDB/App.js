@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const JournalEntryModel_1 = require("./model/JournalEntryModel");
 const EmotionEntryModel_1 = require("./model/EmotionEntryModel");
 class App {
@@ -25,11 +26,7 @@ class App {
     middleware() {
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
-        this.expressApp.use((req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            next();
-        });
+        this.expressApp.use(cors());
     }
     /**
      * Initializes and sets up all application routes for journal and emotion entries.
@@ -199,6 +196,59 @@ class App {
             catch (e) {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
+            }
+        }));
+        // Get a specific emotion entry by ID
+        router.get('/api/v1/emotion/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userId = 1; // Replace with auth later
+            try {
+                const entry = yield this.EmotionEntries.getEmotionEntry(req.params.id, userId);
+                if (!entry) {
+                    return res.status(404).json({ success: false, message: 'Emotion entry not found' });
+                }
+                res.status(200).json({ success: true, data: entry });
+            }
+            catch (e) {
+                console.error('Error fetching emotion entry:', e);
+                res.status(500).json({ success: false, message: 'Error fetching emotion entry' });
+            }
+        }));
+        // Update an emotion entry by ID
+        router.put('/api/v1/emotion/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userId = 1; // Replace with auth later
+            const entryId = req.params.id;
+            try {
+                const updated = yield this.EmotionEntries.updateEmotionEntry(entryId, {
+                    moodScore: req.body.moodScore,
+                    feelings: req.body.feelings,
+                    people: req.body.people,
+                    place: req.body.place,
+                    date: req.body.date ? new Date(req.body.date) : new Date()
+                });
+                if (!updated) {
+                    return res.status(404).json({ success: false, message: 'Emotion entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Emotion entry updated successfully' });
+            }
+            catch (e) {
+                console.error('Error updating emotion entry:', e);
+                res.status(500).json({ success: false, message: 'Error updating emotion entry' });
+            }
+        }));
+        // Delete an emotion entry by ID
+        router.delete('/api/v1/emotion/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userId = 1; // Replace with actual auth later
+            const entryId = req.params.id;
+            try {
+                const result = yield this.EmotionEntries.deleteEmotionEntry(entryId, userId);
+                if (!result || result.deletedCount === 0) {
+                    return res.status(404).json({ success: false, message: 'Emotion entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Emotion entry deleted successfully' });
+            }
+            catch (e) {
+                console.error('Error deleting emotion entry:', e);
+                res.status(500).json({ success: false, message: 'Error deleting emotion entry' });
             }
         }));
         // Add route for root path to serve index.html

@@ -82,6 +82,28 @@ class EmotionEntryModel {
             }
         });
     }
+    // Get a specific emotion entry by ID
+    getEmotionEntry(id, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const entry = yield this.model.findOne({ id: id, userId: userId }).exec();
+                if (!entry)
+                    return null;
+                return {
+                    id: entry.id,
+                    date: entry.date,
+                    moodScore: entry.moodScore,
+                    feelings: entry.feelings,
+                    people: entry.people,
+                    place: entry.place
+                };
+            }
+            catch (e) {
+                console.error("Error fetching emotion entry by ID:", e);
+                throw e;
+            }
+        });
+    }
     // Get monthly emotion data (with flexible date range for testing)
     getMonthlyEmotions(userId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -107,7 +129,8 @@ class EmotionEntryModel {
                 return [];
             }
         });
-    } // Get all emotion entries for a user
+    }
+    // Get all emotion entries for a user
     getAllEmotionEntries(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -132,6 +155,29 @@ class EmotionEntryModel {
             catch (e) {
                 console.error("Error fetching all emotion entries:", e);
                 return [];
+            }
+        });
+    }
+    updateEmotionEntry(id, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield this.model.updateOne({ id }, { $set: data });
+                return result;
+            }
+            catch (e) {
+                console.error("Error updating emotion entry:", e);
+                throw e;
+            }
+        });
+    }
+    deleteEmotionEntry(id, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.model.deleteOne({ id, userId });
+            }
+            catch (e) {
+                console.error("Error deleting emotion entry:", e);
+                throw e;
             }
         });
     }

@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } fr
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js/auto';
 import { EmotionentryproxyService, EmotionEntry } from '../emotionentryproxy.service';
+import { Router } from '@angular/router';
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -28,7 +29,11 @@ export class EmotiongraphComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading: boolean = true;
   errorMessage: string = '';
 
-  constructor(private emotionService: EmotionentryproxyService, private el: ElementRef) {}
+  constructor(
+    private emotionService: EmotionentryproxyService,
+    private el: ElementRef,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadEmotionData();
@@ -201,4 +206,8 @@ export class EmotiongraphComponent implements OnInit, AfterViewInit, OnDestroy {
       this.errorMessage = 'Error rendering emotion chart';
     }
   }
+  
+  goToMoodEchoHistory() {
+    this.router.navigate(['/moodechohistory']);
+  } 
 }

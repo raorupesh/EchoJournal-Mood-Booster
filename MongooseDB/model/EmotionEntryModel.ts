@@ -94,6 +94,26 @@ class EmotionEntryModel {
         }
     }
 
+    // Get a specific emotion entry by ID
+    public async getEmotionEntry(id: string, userId: number) {
+      try {
+        const entry = await this.model.findOne({ id: id, userId: userId }).exec();
+        if (!entry) return null;
+    
+        return {
+          id: entry.id,
+          date: entry.date,
+          moodScore: entry.moodScore,
+          feelings: entry.feelings,
+          people: entry.people,
+          place: entry.place
+        };
+      } catch (e) {
+        console.error("Error fetching emotion entry by ID:", e);
+        throw e;
+      }
+    }
+
     // Get monthly emotion data (with flexible date range for testing)
     public async getMonthlyEmotions(userId: number) {
         try {
@@ -119,7 +139,9 @@ class EmotionEntryModel {
             console.error("Error fetching monthly emotions:", e);
             return [];
         }
-    }    // Get all emotion entries for a user
+    }
+    
+    // Get all emotion entries for a user
     public async getAllEmotionEntries(userId?: number) {
         try {
             let entries;
@@ -144,6 +166,25 @@ class EmotionEntryModel {
             console.error("Error fetching all emotion entries:", e);
             return [];
         }
+    }
+
+    public async updateEmotionEntry(id: string, data: Partial<IEmotionEntryModel>) {
+        try {
+            const result = await this.model.updateOne({ id }, { $set: data });
+            return result;
+        } catch (e) {
+            console.error("Error updating emotion entry:", e);
+            throw e;
+        }
+    }
+
+    public async deleteEmotionEntry(id: string, userId: number) {
+    try {
+        return await this.model.deleteOne({ id, userId });
+      } catch (e) {
+        console.error("Error deleting emotion entry:", e);
+        throw e;
+      }
     }
 }
 

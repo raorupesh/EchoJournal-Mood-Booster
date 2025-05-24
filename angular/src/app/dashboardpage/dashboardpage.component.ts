@@ -17,7 +17,7 @@ export class DashboardpageComponent {
 
   openMoodEcho(): void {
     console.log('Mood Echo clicked');
-    this.router.navigate(['/moodecho']);
+    this.router.navigate(['/moodecho/new']);
   }
 
   openLogJournal(): void {

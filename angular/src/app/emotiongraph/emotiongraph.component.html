@@ -13,7 +13,7 @@
     {{ errorMessage }}
   </div>
   
-  <div class="chart-container" *ngIf="!isLoading" style="position: relative; height: 300px;">
+  <div class="chart-container" *ngIf="!isLoading" style="position: relative; height: 300px; cursor: pointer;" (click)="goToMoodEchoHistory()">
     <canvas id="emotionChart" #emotionChart></canvas>
   </div>
   

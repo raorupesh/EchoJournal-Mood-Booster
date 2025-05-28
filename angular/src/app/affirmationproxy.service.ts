@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Interface matching the IAffirmationModel
 export interface Affirmation {
   id: string;
   userId: number;
@@ -16,7 +15,7 @@ export interface Affirmation {
 })
 
 export class AffirmationproxyService {
-  private apiUrl = 'http://localhost:8080/api/v1/affirmations/'; // This will be proxied to your MongoDB backend
+  private apiUrl = 'http://localhost:8080/api/v1/affirmations/';
 
   constructor(private http: HttpClient) { }
 

@@ -89,13 +89,17 @@ class App {
                     feelings: req.body.feelings,
                     date: req.body.date ? new Date(req.body.date) : undefined
                 });
+                // create affirmation based on the journal entry
+                const affirmation = yield this.AffirmationEntries.createAffirmationWithJournalEntry(entry);
+                if (affirmation) {
+                    console.log('Affirmation created successfully:', affirmation);
+                }
                 res.status(201).json({ success: true, data: entry });
             }
             catch (e) {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error creating journal entry' });
             }
-            // TODO: use AI and create a more meaningful affirmation based on the journal entry
         }));
         router.get('/api/v1/journal/recent', (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from auth , for now hardcoded 1

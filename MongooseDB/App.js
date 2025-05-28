@@ -15,6 +15,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const JournalEntryModel_1 = require("./model/JournalEntryModel");
 const EmotionEntryModel_1 = require("./model/EmotionEntryModel");
+const AffirmationModel_1 = require("./model/AffirmationModel");
 class App {
     constructor(mongoDBConnection) {
         this.expressApp = express();
@@ -22,6 +23,7 @@ class App {
         this.routes();
         this.JournalEntries = new JournalEntryModel_1.JournalEntryModel(mongoDBConnection);
         this.EmotionEntries = new EmotionEntryModel_1.EmotionEntryModel(mongoDBConnection);
+        this.AffirmationEntries = new AffirmationModel_1.AffirmationModel(mongoDBConnection);
     }
     middleware() {
         this.expressApp.use(bodyParser.json());
@@ -93,6 +95,7 @@ class App {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error creating journal entry' });
             }
+            // TODO: use AI and create a more meaningful affirmation based on the journal entry
         }));
         router.get('/api/v1/journal/recent', (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from auth , for now hardcoded 1
@@ -249,6 +252,19 @@ class App {
             catch (e) {
                 console.error('Error deleting emotion entry:', e);
                 res.status(500).json({ success: false, message: 'Error deleting emotion entry' });
+            }
+        }));
+        // Get Affirmations
+        router.get('/api/v1/affirmations', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
+            try {
+                const affirmations = yield this.AffirmationEntries.getAffirmations(userId);
+                res.status(200).json({ success: true, data: affirmations });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching affirmations' });
             }
         }));
         // Add route for root path to serve index.html

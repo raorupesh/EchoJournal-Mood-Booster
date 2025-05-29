@@ -126,7 +126,6 @@ class EmotionEntryModel {
                 userId: userId,
                 date: { $gte: startDate, $lte: endDate }
             }).sort({ date: 1 }).exec();
-            
             return entries.map((entry: IEmotionEntryModel) => ({
                 id: entry.id,
                 date: entry.date,

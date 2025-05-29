@@ -50,7 +50,7 @@ export class LogjournalComponent {
         this.successMessage = 'Journal entry saved successfully!';
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
-        }, 1500);
+        }, 1000);
       },
       error: (error) => {
         console.error('Error saving journal entry:', error);

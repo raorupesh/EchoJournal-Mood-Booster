@@ -3,19 +3,25 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import { JournalEntryModel } from './model/JournalEntryModel';
 import { EmotionEntryModel } from './model/EmotionEntryModel';
+import { AffirmationModel } from './model/AffirmationModel';
 
 class App {
 
   public expressApp: express.Application;
   public JournalEntries: JournalEntryModel;
   public EmotionEntries: EmotionEntryModel;
+  public AffirmationEntries: AffirmationModel;
+
   constructor(mongoDBConnection: string) {
     this.expressApp = express();
     this.middleware();
     this.routes();
     this.JournalEntries = new JournalEntryModel(mongoDBConnection);
     this.EmotionEntries = new EmotionEntryModel(mongoDBConnection);
-  } private middleware(): void {
+    this.AffirmationEntries = new AffirmationModel(mongoDBConnection);
+  }
+
+  private middleware(): void {
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     this.expressApp.use(cors());
@@ -82,13 +88,17 @@ class App {
           feelings: req.body.feelings,
           date: req.body.date ? new Date(req.body.date) : undefined
         });
+        // create affirmation based on the journal entry
+        const affirmation = await this.AffirmationEntries.createAffirmationWithJournalEntry(entry);
+
         res.status(201).json({ success: true, data: entry });
       } catch (e) {
         console.error(e);
         res.status(500).json({ success: false, message: 'Error creating journal entry' });
       }
+      
     });
- 
+
     router.get('/api/v1/journal/recent', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
@@ -262,6 +272,22 @@ class App {
       } catch (e) {
         console.error('Error deleting emotion entry:', e);
         res.status(500).json({ success: false, message: 'Error deleting emotion entry' });
+      }
+    });
+
+    // Get Affirmations
+
+    router.get('/api/v1/affirmations', async (req, res) => {
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
+      try {
+        const affirmations = await this.AffirmationEntries.getAffirmations(userId);
+        
+        res.status(200).json({ success: true, data: affirmations });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ success: false, message: 'Error fetching affirmations' });
       }
     });
 

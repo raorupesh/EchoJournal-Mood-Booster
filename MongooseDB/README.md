@@ -19,6 +19,7 @@ To execute the server db and then the node server with the following commands:
 2. startdbClient.EchoJournal.cmd
 >load ('createDB/createEmotionEntrySampleData.js');
 >load ('createDB/createJournalEntrySampleData.js');
+>load ('createDB/createAffirmationSampleData.js');
 >load ('createDB/createAdminUser.js');
 >exit
 

@@ -147,7 +147,7 @@ onSubmit(form: NgForm): void {
           this.isSubmitting = false;
           form.resetForm({ emojiSlider: 5, withWhom: 'friends', location: 'home' });
           this.emojiDisplay = '😐';
-          this.router.navigate(['/moodechohistory']);
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.errorMessage = 'Error saving mood entry.';

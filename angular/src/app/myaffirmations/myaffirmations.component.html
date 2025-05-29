@@ -1,1 +1,73 @@
-<p>myaffirmations works!</p>
+<div class="container py-4">
+    <!-- Back button -->
+    <div class="row my-4">
+        <div class="col">
+            <a routerLink="/dashboard" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="text-primary">My Affirmations</h2>
+            <p class="text-muted">Review your positive affirmations</p>
+        </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="row" *ngIf="loading">
+        <div class="col text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your affirmations...</p>
+        </div>
+    </div>
+
+    <!-- Error state -->
+    <div class="row" *ngIf="error && !loading">
+        <div class="col">
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                Failed to load affirmations. Please try again later.
+            </div>
+        </div>
+    </div>
+
+    <!-- No affirmations state -->
+    <div class="row" *ngIf="!loading && !error && affirmations.length === 0">
+        <div class="col">
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                You don't have any affirmations yet. They'll appear here when generated from your journal entries.
+            </div>
+        </div>
+    </div>
+
+    <!-- Affirmations as cards -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" *ngIf="!loading && !error && affirmations.length > 0">
+        <div class="col" *ngFor="let affirmation of affirmations">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-light">
+                    <div class="">
+                        <span class="text-primary fw-bold">{{ formatDate(affirmation.createdAt) }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ affirmation.content }}</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a [routerLink]="['/journal', affirmation.sourceJournalEntry]" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-journal-text"></i> Go to Source
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add some spacing at the bottom for mobile -->
+    <div class="pb-4"></div>
+</div>

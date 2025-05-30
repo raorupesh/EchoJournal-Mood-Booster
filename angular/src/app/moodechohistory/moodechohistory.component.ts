@@ -14,6 +14,9 @@ export class MoodechohistoryComponent implements OnInit {
   moodEntries: EmotionEntry[] = [];
   loading = false;
   error = false;
+  showDeleteModal = false;
+  showDeleteSuccess = false;
+  entryToDeleteId: string | null = null;
 
   constructor(
     private emotionService: EmotionentryproxyService,
@@ -55,20 +58,32 @@ export class MoodechohistoryComponent implements OnInit {
     this.router.navigate(['/moodecho/edit', id]);
   }
 
-  // Call delete and update local list
   onDelete(id: string | undefined): void {
     if (!id) return;
+    this.entryToDeleteId = id;
+    this.showDeleteModal = true;
+  }
+  
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+    this.entryToDeleteId = null;
+  }
 
-    if (confirm('Are you sure you want to delete this entry?')) {
-      this.emotionService.deleteEmotionEntry(id).subscribe({
-        next: () => {
-          this.moodEntries = this.moodEntries.filter(entry => entry.id !== id);
-        },
-        error: (err) => {
-          console.error('Failed to delete entry:', err);
-          alert('Delete failed. Please try again.');
-        }
-      });
-    }
+  confirmDelete(): void {
+    if (!this.entryToDeleteId) return;
+    this.emotionService.deleteEmotionEntry(this.entryToDeleteId).subscribe({
+      next: () => {
+        this.fetchMoodEntries();
+        this.closeDeleteModal();
+        this.showDeleteSuccess = true;
+        setTimeout(() => {
+          this.showDeleteSuccess = false;
+        }, 5000);
+      },
+      error: (err) => {
+        console.error('Failed to delete entry:', err);
+        this.closeDeleteModal();
+      }
+    });
   }
 }

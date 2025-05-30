@@ -14,6 +14,9 @@ export class JournalhistoryComponent implements OnInit {
   journalEntries: JournalEntry[] = [];
   loading = true;
   error = false;
+  showDeletedModal = false;
+  showDeleteSuccess = false;
+  entryToDelete: JournalEntry | null = null;
 
   constructor(private journalService: JournalentryproxyService, private router: Router) {}
 
@@ -64,17 +67,31 @@ export class JournalhistoryComponent implements OnInit {
   }
 
   onDelete(entry: JournalEntry): void {
-    if (!entry.id) return;
-    if (confirm('Are you sure you want to delete this journal entry?')) {
-      this.journalService.deleteJournalEntry(entry.id).subscribe({
-        next: () => {
-          this.loadAllEntries(); // This fetches the latest list from the backend
+    this.entryToDelete = entry;
+    this.showDeletedModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.entryToDelete?.id) return;
+    this.journalService.deleteJournalEntry(this.entryToDelete.id).subscribe({
+      next: () => {
+        this.loadAllEntries();
+          this.closeDeleteModal();
+          this.showDeleteSuccess = true;
+          setTimeout(() => {
+            this.showDeleteSuccess = false;
+          }, 3000);
         },
         error: (err: any) => {
           alert('Delete failed. Please try again.');
+          this.closeDeleteModal();
           console.error('Failed to delete journal entry:', err);
         }
       });
     }
+
+  closeDeleteModal(): void {
+    this.showDeletedModal = false;
+    this.entryToDelete = null;
   }
 }

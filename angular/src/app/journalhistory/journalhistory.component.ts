@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { JournalentryproxyService, JournalEntry } from '../journalentryproxy.service';
 
 @Component({
@@ -14,9 +14,9 @@ export class JournalhistoryComponent implements OnInit {
   journalEntries: JournalEntry[] = [];
   loading = true;
   error = false;
-  
-  constructor(private journalService: JournalentryproxyService) {}
-  
+
+  constructor(private journalService: JournalentryproxyService, private router: Router) {}
+
   ngOnInit(): void {
     this.loadAllEntries();
   }
@@ -55,5 +55,26 @@ export class JournalhistoryComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  onEdit(entry: JournalEntry): void {
+    if (entry.id) {
+      this.router.navigate(['/logjournal', entry.id]);
+    }
+  }
+
+  onDelete(entry: JournalEntry): void {
+    if (!entry.id) return;
+    if (confirm('Are you sure you want to delete this journal entry?')) {
+      this.journalService.deleteJournalEntry(entry.id).subscribe({
+        next: () => {
+          this.loadAllEntries(); // This fetches the latest list from the backend
+        },
+        error: (err: any) => {
+          alert('Delete failed. Please try again.');
+          console.error('Failed to delete journal entry:', err);
+        }
+      });
+    }
   }
 }

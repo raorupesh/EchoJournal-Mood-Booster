@@ -14,8 +14,10 @@ const Mongoose = require("mongoose");
 const crypto = require("crypto");
 const openai_1 = require("@ai-sdk/openai");
 const ai_1 = require("ai");
+const dotenv = require("dotenv");
+dotenv.config();
 const openai = (0, openai_1.createOpenAI)({
-    apiKey: "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",
+    apiKey: process.env.OPENAI_API_KEY,
 });
 class AffirmationModel {
     constructor(DB_CONNECTION_STRING) {
@@ -45,23 +47,6 @@ class AffirmationModel {
             this.model = Mongoose.model("Affirmation");
         }
     }
-    createAffirmation(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // Generate AI-based affirmation if content is not provided but sourceJournalEntry is
-            let content = data.content;
-            if (!content && data.sourceJournalEntry) {
-                content = yield this.generateAIAffirmation(data.sourceJournalEntry);
-            }
-            const entry = new this.model({
-                id: data.id || this.generateId(),
-                userId: data.userId,
-                content: content,
-                createdAt: new Date(),
-                sourceJournalEntry: data.sourceJournalEntry || null
-            });
-            return yield entry.save();
-        });
-    }
     createAffirmationWithJournalEntry(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const affirmationContent = yield this.generateAIAffirmation(data);
@@ -79,19 +64,11 @@ class AffirmationModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let prompt;
-                if (typeof journalData === 'string') {
-                    // Basic prompt if we only have the content
-                    prompt = `Based on the following journal entry, create a positive, personalized affirmation that is supportive, uplifting, and encourages self-compassion. The affirmation should be one concise sentence and feel personal to the writer.
-                
-                Journal entry: "${journalData}"`;
-                }
-                else {
-                    // Enhanced prompt with additional journal parameters
-                    const formattedDate = journalData.date.toLocaleDateString();
-                    const feelingsText = journalData.feelings && journalData.feelings.length > 0
-                        ? `The writer expressed these feelings: ${journalData.feelings.join(', ')}.`
-                        : '';
-                    prompt = `Create a personalized, uplifting affirmation based on this journal entry from ${formattedDate}.
+                const formattedDate = journalData.date.toLocaleDateString();
+                const feelingsText = journalData.feelings && journalData.feelings.length > 0
+                    ? `The writer expressed these feelings: ${journalData.feelings.join(', ')}.`
+                    : '';
+                prompt = `Create a personalized, uplifting affirmation based on this journal entry from ${formattedDate}.
                 
                 Journal content: "${journalData.content}"
                 
@@ -102,8 +79,8 @@ class AffirmationModel {
                 2. Feel deeply personal to address the writer's specific situation and emotions
                 3. Offer encouragement that resonates with their expressed feelings
                 4. Foster self-compassion and positive growth
-                5. Be written in first-person ("I" statements)`;
-                }
+                5. Avoid complex language or jargon, making it accessible and relatable
+                6. Be written in first-person ("I" statements)`;
                 const { text } = yield (0, ai_1.generateText)({
                     model: openai('gpt-4.1-mini'),
                     prompt: prompt,

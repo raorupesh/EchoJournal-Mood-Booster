@@ -145,7 +145,30 @@ class App {
         res.status(500).json({ success: false, message: 'Error fetching journal entry' });
       }
     });
- 
+
+    // Update journal entry
+    router.put('/api/v1/journal/:id', async (req, res) => {
+      // get userid from auth , for now hardcoded 1
+      const userId = 1;
+
+      try {
+        const updatedEntry = await this.JournalEntries.updateJournalEntry(req.params.id, {
+          content: req.body.content,
+          feelings: req.body.feelings,
+          updatedAT: new Date()
+        });
+        
+        if (!updatedEntry) {
+          return res.status(404).json({ success: false, message: 'Journal entry not found' });
+        }
+        
+        res.status(200).json({ success: true, message: 'Journal entry updated successfully', data: updatedEntry });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ success: false, message: 'Error updating journal entry' });
+      }
+    });
+
     // Add DELETE endpoint for journal entries
     router.delete('/api/v1/journal/:id', async (req, res) => {
       // get userid from auth, for now hardcoded 1

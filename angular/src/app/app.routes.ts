@@ -15,6 +15,7 @@ export const routes: Routes = [
   { path: 'moodechohistory', component: MoodechohistoryComponent },
   { path: 'journal/:id', component: JournalpageComponent },
   { path: 'logjournal', component: LogjournalComponent },
+  { path: 'logjournal/:id', component: LogjournalComponent },
   { path: 'moodecho/edit/:id', component: MoodechoComponent },
   { path: 'moodecho/new', component: MoodechoComponent },
   { path: 'myaffirmations', component: MyaffirmationsComponent },

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { JournalentryproxyService, JournalEntry } from '../journalentryproxy.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './logjournal.component.html',
   styleUrl: './logjournal.component.css'
 })
-export class LogjournalComponent {
+export class LogjournalComponent implements OnInit {
   journal: JournalEntry = {
     content: '',
     feelings: []
@@ -21,10 +21,14 @@ export class LogjournalComponent {
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
+  isEditMode: any;
+  editId: any;
+  feelingsInput: string = '';
   
   constructor(
     private journalService: JournalentryproxyService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
   
   onSubmit(form: NgForm): void {
@@ -39,25 +43,41 @@ export class LogjournalComponent {
     // Convert comma-separated strings to arrays
     const journalToSubmit: JournalEntry = {
       content: this.journal.content,
-      feelings: this.parseCommaSeparated(this.journal.feelings as unknown as string),
-      date: new Date()
+      feelings: this.parseCommaSeparated(this.feelingsInput),
+      date: this.isEditMode ? this.journal.date : new Date()
     };
     
-    this.journalService.createJournalEntry(journalToSubmit).subscribe({
-      next: (response) => {
-        console.log('Journal entry saved:', response);
-        this.isSubmitting = false;
-        this.successMessage = 'Journal entry saved successfully!';
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 1000);
-      },
-      error: (error) => {
-        console.error('Error saving journal entry:', error);
-        this.isSubmitting = false;
-        this.errorMessage = `Error saving journal entry: ${error.message || 'Unknown error'}`;
+    if (this.isEditMode && this.editId) {
+      this.journalService.updateJournalEntry(this.editId, journalToSubmit).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.successMessage = 'Journal entry updated successfully!';
+          setTimeout(() => {
+            this.router.navigate(['/journalhistory']);
+          }, 1000);
+        },
+        error: (error: any) => {
+          this.isSubmitting = false;
+          this.errorMessage = 'Failed to update journal entry.';
+        }
+      });
+    } else {
+        this.journalService.createJournalEntry(journalToSubmit).subscribe({
+          next: (response) => {
+            console.log('Journal entry saved:', response);
+            this.isSubmitting = false;
+            this.successMessage = 'Journal entry saved successfully!';
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 1000);
+          },
+          error: (error) => {
+            console.error('Error saving journal entry:', error);
+            this.isSubmitting = false;
+            this.errorMessage = `Error saving journal entry: ${error.message || 'Unknown error'}`;
+          }
+        });
       }
-    });
   }
   
   parseCommaSeparated(input: string): string[] {
@@ -69,5 +89,24 @@ export class LogjournalComponent {
   
   goBack(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.journalService.getEntryById(id).subscribe({
+        next: (res) => {
+          if (res && res.success && res.data) {
+            this.journal = { ...res.data };
+            this.feelingsInput = res.data.feelings.join(', ');
+            this.isEditMode = true;
+            this.editId = id;
+          }
+        },
+        error: (err) => {
+          this.errorMessage = 'Failed to load journal entry.';
+        }
+      });
+    }
   }
 }

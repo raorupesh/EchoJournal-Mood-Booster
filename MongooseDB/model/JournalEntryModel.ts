@@ -87,6 +87,7 @@ class JournalEntryModel {
     public async updateJournalEntry(entryId: string, update: {
         content?: string;
         feelings?: string[];
+        updatedAT?: Date;
     }) {
         
         // Add updatedAt timestamp to the update

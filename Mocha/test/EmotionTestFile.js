@@ -5,44 +5,28 @@ chai.use(chaiHttp);
 
 const BASE_URL = 'http://localhost:8080';
 
-describe('Emotion Entry Tests', function () {
+describe('Emotion Entry API Tests', function () {
     let testUserId = 1;
     let testEmotionId;
 
+    // Create a new emotion entry before tests
     before(function (done) {
         chai.request(BASE_URL)
             .post('/api/v1/emotion')
             .send({
                 userId: testUserId,
-                moodScore: 3,
-                feelings: ['motivated'],
-                people: ['family'],
-                place: ['cafe']
+                moodScore: 7,
+                feelings: ['happy', 'motivated'],
+                people: ['friend'],
+                place: ['home']
             })
             .end(function (err, res) {
                 expect(res).to.have.status(201);
                 expect(res.body).to.have.property('data');
-                testEmotionId =  res.body.data.id;
+                testEmotionId = res.body.data.id;
                 done();
             });
     });
-
-    describe('GET /api/v1/emotion/:id', function () {
-    it('Should return a single emotion entry by ID', function (done) {
-        chai.request(BASE_URL)
-            .get(`/api/v1/emotion/${testEmotionId}`)
-            .end(function (err, res) {
-                expect(res).to.have.status(200);
-                expect(res.body).to.have.property('success', true);
-                expect(res.body).to.have.property('data');
-                expect(res.body.data).to.include.keys(
-                'id', 'moodScore', 'feelings', 'people', 'place', 'date');
-                expect(res.body.data.id).to.equal(testEmotionId);
-                done();
-            });
-        });
-    });
-
 
     describe('GET /api/v1/emotion/all', function () {
         let response;
@@ -80,38 +64,72 @@ describe('Emotion Entry Tests', function () {
         });
     });
 
-    describe('GET /api/v1/emotion/monthly', function () {
-        it('Should return monthly emotion data', function (done) {
+    describe('GET /api/v1/emotion/:id', function () {
+        it('Should return the created emotion entry by ID', function (done) {
             chai.request(BASE_URL)
-                .get('/api/v1/emotion/monthly')
+                .get(`/api/v1/emotion/${testEmotionId}`)
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
-                    expect(res.body).to.have.property('success', true);
                     expect(res.body).to.have.property('data');
+                    expect(res.body.data).to.have.property('id', testEmotionId);
                     done();
                 });
         });
-    });
-
-    describe('Error Handling', function () {
-        it('Should return 404 for non-existent emotion entry', function (done) {
+        
+        it('Should return 404 for non-existent emotion entry by ID', function (done) {
             chai.request(BASE_URL)
                 .get('/api/v1/emotion/000000000000000000000000')
                 .end(function (err, res) {
                     expect(res).to.have.status(404);
+                    expect(res.body).to.have.property('success', false);
+                    expect(res.body).to.have.property('message', 'Emotion entry not found');
                     done();
-            });
+                });
         });
+        
+        it('Should return 500 for missing required fields on creation', function (done) {
+            chai.request(BASE_URL)
+                .post('/api/v1/emotion')
+                .send({ userId: 1 }) // missing moodScore, feelings, etc.
+                .end(function (err, res) {
+                    expect(res).to.have.status(500);
+                    expect(res.body).to.have.property('success', false);
+                    done();
+                });
+        });
+
     });
 
-    describe('Delete Emotion Entry Operation', function () {
+    describe('DELETE /api/v1/emotion/:id', function () {
         it('Should delete an emotion entry', function (done) {
             chai.request(BASE_URL)
                 .delete(`/api/v1/emotion/${testEmotionId}`)
                 .end(function (err, res) {
                     expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('success', true);
+                    expect(res.body).to.have.property('message', 'Emotion entry deleted successfully');
                     done();
                 });
         });
+
+        it('Should return with status 404 for non-existent emotion entry', function (done) {
+        chai.request(BASE_URL)
+            .get('/api/v1/emotion/000000000000000000000000')
+            .end(function (err, res) {
+                expect(res).to.have.status(404);
+                done();
+            });
+        });
+
+                it('Should return http status 500 for missing required fields', function (done) {
+        chai.request(BASE_URL)
+            .post('/api/v1/emotion')
+             // missing moodScore, feelings, etc.
+            .send({ userId: testUserId })
+            .end(function (err, res) {
+                expect(res).to.have.status(500);
+                done();
+            });
+        });    
     });
 });

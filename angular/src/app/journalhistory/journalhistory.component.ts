@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { JournalentryproxyService, JournalEntry } from '../journalentryproxy.service';
 
 @Component({
@@ -14,9 +14,12 @@ export class JournalhistoryComponent implements OnInit {
   journalEntries: JournalEntry[] = [];
   loading = true;
   error = false;
-  
-  constructor(private journalService: JournalentryproxyService) {}
-  
+  showDeletedModal = false;
+  showDeleteSuccess = false;
+  entryToDelete: JournalEntry | null = null;
+
+  constructor(private journalService: JournalentryproxyService, private router: Router) {}
+
   ngOnInit(): void {
     this.loadAllEntries();
   }
@@ -55,5 +58,40 @@ export class JournalhistoryComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  onEdit(entry: JournalEntry): void {
+    if (entry.id) {
+      this.router.navigate(['/logjournal', entry.id]);
+    }
+  }
+
+  onDelete(entry: JournalEntry): void {
+    this.entryToDelete = entry;
+    this.showDeletedModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.entryToDelete?.id) return;
+    this.journalService.deleteJournalEntry(this.entryToDelete.id).subscribe({
+      next: () => {
+        this.loadAllEntries();
+          this.closeDeleteModal();
+          this.showDeleteSuccess = true;
+          setTimeout(() => {
+            this.showDeleteSuccess = false;
+          }, 3000);
+        },
+        error: (err: any) => {
+          alert('Delete failed. Please try again.');
+          this.closeDeleteModal();
+          console.error('Failed to delete journal entry:', err);
+        }
+      });
+    }
+
+  closeDeleteModal(): void {
+    this.showDeletedModal = false;
+    this.entryToDelete = null;
   }
 }

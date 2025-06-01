@@ -41,11 +41,11 @@ export class JournalentryproxyService {
     return this.http.get<{ success: boolean, data: JournalEntry }>(`${this.apiUrl}${id}`);
   }
   
-  deleteEntry(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${id}`);
+  deleteJournalEntry(id: string): Observable<any> {
+    return this.http.delete<{ success: boolean }>(`${this.apiUrl}${id}`);
   }
-  
-  updateEntry(id: string, entry: Partial<JournalEntry>): Observable<any> {
-    return this.http.put(`${this.apiUrl}${id}`, entry);
+
+  updateJournalEntry(id: string, entry: Partial<JournalEntry>): Observable<any> {
+    return this.http.put<{ success: boolean }>(`${this.apiUrl}${id}`, entry);
   }
 }

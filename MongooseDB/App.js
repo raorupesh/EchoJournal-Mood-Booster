@@ -91,9 +91,6 @@ class App {
                 });
                 // create affirmation based on the journal entry
                 const affirmation = yield this.AffirmationEntries.createAffirmationWithJournalEntry(entry);
-                if (affirmation) {
-                    console.log('Affirmation created successfully:', affirmation);
-                }
                 res.status(201).json({ success: true, data: entry });
             }
             catch (e) {
@@ -140,6 +137,26 @@ class App {
             catch (e) {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error fetching journal entry' });
+            }
+        }));
+        // Update journal entry
+        router.put('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = 1;
+            try {
+                const updatedEntry = yield this.JournalEntries.updateJournalEntry(req.params.id, {
+                    content: req.body.content,
+                    feelings: req.body.feelings,
+                    updatedAT: new Date()
+                });
+                if (!updatedEntry) {
+                    return res.status(404).json({ success: false, message: 'Journal entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Journal entry updated successfully', data: updatedEntry });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error updating journal entry' });
             }
         }));
         // Add DELETE endpoint for journal entries

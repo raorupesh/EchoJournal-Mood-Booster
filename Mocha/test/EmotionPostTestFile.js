@@ -1,0 +1,54 @@
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const expect = chai.expect;
+chai.use(chaiHttp);
+
+const BASE_URL = 'http://localhost:8080';
+
+describe('Emotion Entry POST API Tests', function () {
+    it('Should create a new emotion entry with valid data', function (done) {
+        chai.request(BASE_URL)
+            .post('/api/v1/emotion')
+            .send({
+                userId: 1,
+                moodScore: 2,
+                feelings: ['sad', 'stressed'],
+                people: ['home'],
+                place: ['cafe']
+            })
+            .end(function (err, res) {
+                expect(res).to.have.status(201);
+                expect(res.body).to.have.property('data');
+                expect(res.body.data).to.include.keys('id', 'userId', 'moodScore', 'feelings', 'people', 'place');
+                done();
+            });
+    });
+
+    it('Should return with http staus as 500 for missing required fields', function (done) {
+        chai.request(BASE_URL)
+            .post('/api/v1/emotion')
+            .send({ userId: 1 }) // missing moodScore, feelings, etc.
+            .end(function (err, res) {
+                expect(res).to.have.status(500);
+                expect(res.body).to.have.property('success', false);
+                done();
+            });
+    });
+
+    it('Should return 500 for invalid data types', function (done) {
+        chai.request(BASE_URL)
+            .post('/api/v1/emotion')
+            .send({
+                userId: "not-a-number",
+                moodScore: "high",      
+                feelings: "happy",      
+                people: "friend",      
+                place: "park"           
+            })
+            .end(function (err, res) {
+                expect(res).to.have.status(500);
+                expect(res.body).to.have.property('success', false);
+                done();
+            });
+    });
+});

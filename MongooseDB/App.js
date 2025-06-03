@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const JournalEntryModel_1 = require("./model/JournalEntryModel");
 const EmotionEntryModel_1 = require("./model/EmotionEntryModel");
 const AffirmationModel_1 = require("./model/AffirmationModel");
@@ -28,7 +27,11 @@ class App {
     middleware() {
         this.expressApp.use(bodyParser.json());
         this.expressApp.use(bodyParser.urlencoded({ extended: false }));
-        this.expressApp.use(cors());
+        this.expressApp.use((req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
     }
     /**
      * Initializes and sets up all application routes for journal and emotion entries.

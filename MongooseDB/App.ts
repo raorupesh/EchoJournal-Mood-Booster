@@ -24,7 +24,11 @@ class App {
   private middleware(): void {
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(bodyParser.urlencoded({ extended: false }));
-    this.expressApp.use(cors());
+        this.expressApp.use( (req, res, next) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      next();
+    });
   }
   /**
    * Initializes and sets up all application routes for journal and emotion entries.

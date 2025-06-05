@@ -25,7 +25,7 @@ class JournalEntryModel {
     createSchema() {
         this.schema = new Mongoose.Schema({
             id: { type: String, required: true, default: () => this.generateId(), unique: true },
-            userId: { type: Number, required: true },
+            userId: { type: String, required: true },
             date: { type: Date, required: true },
             content: { type: String, required: true },
             feelings: { type: [String], required: true },

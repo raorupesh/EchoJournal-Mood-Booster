@@ -5,6 +5,23 @@
     </div>
     <div class="d-flex align-items-center">
       <span class="header-logo">EJ</span>
+      <!-- Minimal Authentication Buttons -->
+      <div class="auth-buttons ms-3">
+        <button 
+          *ngIf="!(authService.authStatus$ | async)?.authenticated" 
+          (click)="login()" 
+          class="btn btn-primary btn-sm">
+          Login with Google
+        </button>
+        <div *ngIf="(authService.authStatus$ | async)?.authenticated" class="d-flex align-items-center">
+          <span class="me-2">Welcome, {{ (authService.authStatus$ | async)?.user?.displayName }}!</span>
+          <button 
+            (click)="logout()" 
+            class="btn btn-outline-secondary btn-sm">
+            Logout
+          </button>
+        </div>
+      </div>
     </div>
   </header>
   <main class="app-content">

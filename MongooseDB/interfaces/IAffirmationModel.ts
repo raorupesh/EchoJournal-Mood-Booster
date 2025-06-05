@@ -2,7 +2,7 @@ import Mongoose = require("mongoose");
 
 interface IAffirmationModel extends Mongoose.Document {
     id: string,
-    userId: number,
+    userId: string,
     content: string,
     sourceJournalEntry: string,
     createdAt: Date,

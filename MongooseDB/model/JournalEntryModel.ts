@@ -22,7 +22,7 @@ class JournalEntryModel {
         this.schema = new Mongoose.Schema(
             {
                 id: { type: String, required: true, default: () => this.generateId(), unique: true },
-                userId: { type: Number, required: true },
+                userId: { type: String, required: true },
                 date: { type: Date, required: true },
                 content: { type: String, required: true },
                 feelings: { type: [String], required: true },
@@ -43,7 +43,7 @@ class JournalEntryModel {
     }
 
     public async createJournalEntry(data: {
-        userId: number;
+        userId: string;
         content: string;
         feelings: string[];
         date?: Date;
@@ -61,19 +61,19 @@ class JournalEntryModel {
         return await entry.save();
     }
 
-    public async getJournalEntry(entryId: string, userId: number) {
+    public async getJournalEntry(entryId: string, userId: string) {
         return await this.model.findOne({ id: entryId, userId }).exec();
     }
 
 
-    public async getRecentJournalEntries(userId: number, limit: number = 3) {
+    public async getRecentJournalEntries(userId: string, limit: number = 3) {
         return await this.model.find({ userId })
             .sort({ date: -1 })
             .limit(limit)
             .exec();
     }
 
-    public async getAllJournalEntries(userId: number, page: number = 1, limit: number = 10) {
+    public async getAllJournalEntries(userId: string, page: number = 1, limit: number = 10) {
         const skip = (page - 1) * limit;
         const total = await this.model.countDocuments({ userId });
         const entries = await this.model.find({ userId })

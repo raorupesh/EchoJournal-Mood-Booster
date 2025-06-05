@@ -2,7 +2,7 @@ import Mongoose = require("mongoose");
 
 interface IEmotionEntryModel extends Mongoose.Document {
   id: string;
-  userId: number;
+  userId: string;
   date: Date;
   moodScore: number;
   feelings: string[];

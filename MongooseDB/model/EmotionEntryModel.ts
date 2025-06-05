@@ -22,7 +22,7 @@ class EmotionEntryModel {
         this.schema = new Mongoose.Schema(
             {
                 id: { type: String, required: true, default: () => this.generateId(), unique: true },
-                userId: { type: Number, required: true },
+                userId: { type: String, required: true },
                 date: { type: Date, required: true },
                 moodScore: { type: Number, required: true },
                 feelings: { type: [String], required: true },
@@ -45,7 +45,7 @@ class EmotionEntryModel {
 
     // Log a new emotion entry
     public async createEmotionEntry(data: {
-        userId: number;
+        userId: string;
         moodScore: number;
         feelings: string[];
         people: string[];
@@ -95,7 +95,7 @@ class EmotionEntryModel {
     }
 
     // Get a specific emotion entry by ID
-    public async getEmotionEntry(id: string, userId: number) {
+    public async getEmotionEntry(id: string, userId: string) {
       try {
         const entry = await this.model.findOne({ id: id, userId: userId }).exec();
         if (!entry) return null;
@@ -115,7 +115,7 @@ class EmotionEntryModel {
     }
 
     // Get monthly emotion data (with flexible date range for testing)
-    public async getMonthlyEmotions(userId: number) {
+    public async getMonthlyEmotions(userId: string) {
         try {
             // for now, we will just get the last 1 month of data
             const endDate = new Date();
@@ -141,7 +141,7 @@ class EmotionEntryModel {
     }
     
     // Get all emotion entries for a user
-    public async getAllEmotionEntries(userId?: number) {
+    public async getAllEmotionEntries(userId?: string) {
         try {
             let entries;
             if(userId){
@@ -177,7 +177,7 @@ class EmotionEntryModel {
         }
     }
 
-    public async deleteEmotionEntry(id: string, userId: number) {
+    public async deleteEmotionEntry(id: string, userId: string) {
     try {
         return await this.model.deleteOne({ id, userId });
       } catch (e) {

@@ -32,7 +32,7 @@ class AffirmationModel {
         this.schema = new Mongoose.Schema(
             {
                 id: { type: String, required: true, unique: true },
-                userId: { type: Number, required: true },
+                userId: { type: String, required: true },
                 content: { type: String, required: true },
                 sourceJournalEntry: { type: String, default: null },
                 createdAt: { type: Date, default: Date.now }
@@ -101,7 +101,7 @@ class AffirmationModel {
         }
     }
 
-    public async getAffirmations(userId: number): Promise<IAffirmationModel[]> {
+    public async getAffirmations(userId: string): Promise<IAffirmationModel[]> {
         return await this.model.find({ userId }).sort({ createdAt: -1 }).exec();
     }
 

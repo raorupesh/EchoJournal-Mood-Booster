@@ -14,6 +14,7 @@ import { WelcomepageComponent } from './welcomepage/welcomepage.component';
 import { LogjournalComponent } from './logjournal/logjournal.component';
 import { JournalentryproxyService } from './journalentryproxy.service';
 import { EmotionentryproxyService } from './emotionentryproxy.service';
+import { AuthproxyService } from './authproxy.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { EmotionentryproxyService } from './emotionentryproxy.service';
     FormsModule,
     HttpClientModule,
   ],
-  providers: [JournalentryproxyService, EmotionentryproxyService],
+  providers: [JournalentryproxyService, EmotionentryproxyService, AuthproxyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

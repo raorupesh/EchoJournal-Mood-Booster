@@ -54,17 +54,12 @@ class App {
         this.expressApp.use(passport.session());
     }
     validateAuth(req, res, next) {
-        console.log("=== Authentication Check ===");
-        console.log("Session ID:", req.sessionID);
-        console.log("Session data:", JSON.stringify(req.session));
-        console.log("Is authenticated:", req.isAuthenticated());
         if (req.isAuthenticated()) {
             console.log("user is authenticated");
             console.log("User object:", JSON.stringify(req.user));
             console.log("User ID:", req.user.id);
             return next();
         }
-        console.log("user is not authenticated");
         console.log("Headers:", JSON.stringify(req.headers));
         res.status(401).json({ success: false, message: 'Authentication required' });
     }
@@ -72,15 +67,10 @@ class App {
         let router = express.Router();
         router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
         router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: 'http://localhost:4200' }), (req, res) => {
-            console.log("successfully authenticated user and returned to callback page.");
-            console.log("redirecting to Angular app dashboard");
             res.redirect('http://localhost:4200/dashboard');
-        }); // Check authentication status
+        });
+        // Check authentication status
         router.get('/api/auth/status', (req, res) => {
-            console.log("=== Auth Status Check ===");
-            console.log("Session ID:", req.sessionID);
-            console.log("Is authenticated:", req.isAuthenticated());
-            console.log("Session data:", JSON.stringify(req.session));
             if (req.isAuthenticated()) {
                 console.log("User in session:", JSON.stringify(req.user));
                 res.json({
@@ -106,9 +96,10 @@ class App {
                 }
                 res.json({ success: true, message: 'Logged out successfully' });
             });
-        }); // Journal Entry routes
+        });
+        // Journal Entry routes
         // Create new journal entry
-        router.post('/api/v1/journal', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.post('/api/v2/journal', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Creating journal entry for user:", req.user.id);
             const userId = req.user.id;
@@ -128,7 +119,7 @@ class App {
                 res.status(500).json({ success: false, message: 'Error creating journal entry' });
             }
         }));
-        router.get('/api/v1/journal/recent', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v2/journal/recent', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Getting recent journal entries for user:", req.user.id);
             const userId = req.user.id;
@@ -141,7 +132,7 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching recent journal entries' });
             }
         }));
-        router.get('/api/v1/journal/all', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v2/journal/all', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Getting all journal entries for user:", req.user.id);
             const userId = req.user.id;
@@ -156,7 +147,7 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching all journal entries' });
             }
         }));
-        router.get('/api/v1/journal/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v2/journal/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Getting journal entry for user:", req.user.id);
             const userId = req.user.id;
@@ -171,8 +162,9 @@ class App {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error fetching journal entry' });
             }
-        })); // Update journal entry
-        router.put('/api/v1/journal/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Update journal entry
+        router.put('/api/v2/journal/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Updating journal entry for user:", req.user.id);
             const userId = req.user.id;
@@ -191,8 +183,9 @@ class App {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error updating journal entry' });
             }
-        })); // Add DELETE endpoint for journal entries
-        router.delete('/api/v1/journal/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Add DELETE endpoint for journal entries
+        router.delete('/api/v2/journal/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Deleting journal entry for user:", req.user.id);
             const userId = req.user.id;
@@ -207,8 +200,9 @@ class App {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error deleting journal entry' });
             }
-        })); // Emotion Entry routes
-        router.post('/api/v1/emotion', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Emotion Entry routes
+        router.post('/api/v2/emotion', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Creating emotion entry for user:", req.user.id);
             const userId = req.user.id;
@@ -228,7 +222,7 @@ class App {
                 res.status(500).json({ success: false, message: 'Error creating emotion entry' });
             }
         }));
-        router.get('/api/v1/emotion/monthly', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v2/emotion/monthly', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Getting monthly emotions for user:", req.user.id);
             const userId = req.user.id;
@@ -241,7 +235,7 @@ class App {
                 res.status(500).json({ success: false, message: 'Error fetching monthly emotion data' });
             }
         }));
-        router.get('/api/v1/emotion/all', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        router.get('/api/v2/emotion/all', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Getting all emotions for user:", req.user.id);
             const userId = req.user.id;
@@ -253,8 +247,9 @@ class App {
                 console.error(e);
                 res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
             }
-        })); // Get a specific emotion entry by ID
-        router.get('/api/v1/emotion/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Get a specific emotion entry by ID
+        router.get('/api/v2/emotion/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             console.log("Getting emotion entry for user:", req.user.id);
             const userId = req.user.id; // Get from authenticated user
             try {
@@ -268,8 +263,9 @@ class App {
                 console.error('Error fetching emotion entry:', e);
                 res.status(500).json({ success: false, message: 'Error fetching emotion entry' });
             }
-        })); // Update an emotion entry by ID
-        router.put('/api/v1/emotion/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Update an emotion entry by ID
+        router.put('/api/v2/emotion/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             console.log("Updating emotion entry for user:", req.user.id);
             const userId = req.user.id; // Get from authenticated user
             const entryId = req.params.id;
@@ -290,8 +286,9 @@ class App {
                 console.error('Error updating emotion entry:', e);
                 res.status(500).json({ success: false, message: 'Error updating emotion entry' });
             }
-        })); // Delete an emotion entry by ID
-        router.delete('/api/v1/emotion/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Delete an emotion entry by ID
+        router.delete('/api/v2/emotion/:id', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             console.log("Deleting emotion entry for user:", req.user.id);
             const userId = req.user.id; // Get from authenticated user
             const entryId = req.params.id;
@@ -306,11 +303,274 @@ class App {
                 console.error('Error deleting emotion entry:', e);
                 res.status(500).json({ success: false, message: 'Error deleting emotion entry' });
             }
-        })); // Get Affirmations
-        router.get('/api/v1/affirmations', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        }));
+        // Get Affirmations
+        router.get('/api/v2/affirmations', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             // get userid from authenticated user
             console.log("Getting affirmations for user:", req.user.id);
             const userId = req.user.id;
+            try {
+                const affirmations = yield this.AffirmationEntries.getAffirmations(userId);
+                res.status(200).json({ success: true, data: affirmations });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching affirmations' });
+            }
+        }));
+        // Daily Summary API endpoints
+        router.get('/api/v2/emotion/daily/summary', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            console.log("Getting daily summary for user:", req.user.id);
+            const userId = req.user.id;
+            try {
+                // Get date from query parameter or use today
+                const dateParam = req.query.date;
+                const targetDate = dateParam ? new Date(dateParam) : new Date();
+                // Get daily journal entries
+                const journalEntries = yield this.JournalEntries.getDailyJournalEntries(userId, targetDate);
+                // Get daily emotion entries
+                const emotionEntries = yield this.EmotionEntries.getDailyEmotionEntries(userId, targetDate);
+                // Calculate average mood score
+                let averageMoodScore = 0;
+                let moodDescription = 'neutral';
+                if (emotionEntries.length > 0) {
+                    const totalMoodScore = emotionEntries.reduce((sum, entry) => sum + entry.moodScore, 0);
+                    averageMoodScore = Math.round((totalMoodScore / emotionEntries.length) * 100) / 100;
+                    // Determine mood description based on average score
+                    if (averageMoodScore >= 7) {
+                        moodDescription = 'very positive';
+                    }
+                    else if (averageMoodScore >= 5) {
+                        moodDescription = 'positive';
+                    }
+                    else if (averageMoodScore >= 3) {
+                        moodDescription = 'neutral';
+                    }
+                    else {
+                        moodDescription = 'challenging';
+                    }
+                }
+                // Get all feelings from today's emotion entries
+                const todaysFeelings = [...new Set(emotionEntries.flatMap(entry => entry.feelings))];
+                const summary = {
+                    date: targetDate.toISOString().split('T')[0],
+                    journalEntriesCount: journalEntries.length,
+                    emotionEntriesCount: emotionEntries.length,
+                    averageMoodScore,
+                    moodDescription,
+                    todaysFeelings,
+                    hasEntries: journalEntries.length > 0 || emotionEntries.length > 0
+                };
+                res.status(200).json({ success: true, data: summary });
+            }
+            catch (e) {
+                console.error('Error fetching daily summary:', e);
+                res.status(500).json({ success: false, message: 'Error fetching daily summary' });
+            }
+        }));
+        // V1 unauthenticated routes
+        // Journal Entry routes
+        // Create new journal entry
+        router.post('/api/v1/journal', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const entry = yield this.JournalEntries.createJournalEntry({
+                    userId: userId,
+                    content: req.body.content,
+                    feelings: req.body.feelings,
+                    date: req.body.date ? new Date(req.body.date) : undefined
+                });
+                // create affirmation based on the journal entry
+                const affirmation = yield this.AffirmationEntries.createAffirmationWithJournalEntry(entry);
+                res.status(201).json({ success: true, data: entry });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error creating journal entry' });
+            }
+        }));
+        router.get('/api/v1/journal/recent', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const entries = yield this.JournalEntries.getRecentJournalEntries(userId);
+                res.status(200).json({ success: true, data: entries });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching recent journal entries' });
+            }
+        }));
+        router.get('/api/v1/journal/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const page = parseInt(req.query.page) || 1;
+                const limit = parseInt(req.query.limit) || 10;
+                const result = yield this.JournalEntries.getAllJournalEntries(userId, page, limit);
+                res.status(200).json(Object.assign({ success: true }, result));
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching all journal entries' });
+            }
+        }));
+        router.get('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const entry = yield this.JournalEntries.getJournalEntry(req.params.id, userId);
+                if (!entry) {
+                    return res.status(404).json({ success: false, message: 'Journal entry not found' });
+                }
+                res.status(200).json({ success: true, data: entry });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching journal entry' });
+            }
+        }));
+        // Update journal entry
+        router.put('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const updatedEntry = yield this.JournalEntries.updateJournalEntry(req.params.id, {
+                    content: req.body.content,
+                    feelings: req.body.feelings,
+                    updatedAT: new Date()
+                });
+                if (!updatedEntry) {
+                    return res.status(404).json({ success: false, message: 'Journal entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Journal entry updated successfully', data: updatedEntry });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error updating journal entry' });
+            }
+        }));
+        // Add DELETE endpoint for journal entries
+        router.delete('/api/v1/journal/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth, for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const result = yield this.JournalEntries.deleteJournalEntry(req.params.id);
+                if (!result) {
+                    return res.status(404).json({ success: false, message: 'Journal entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Journal entry deleted successfully' });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error deleting journal entry' });
+            }
+        }));
+        // Emotion Entry routes
+        router.post('/api/v1/emotion', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const entry = yield this.EmotionEntries.createEmotionEntry({
+                    userId: userId,
+                    moodScore: req.body.moodScore,
+                    feelings: req.body.feelings,
+                    people: req.body.people || [],
+                    place: req.body.place || [],
+                    date: req.body.date ? new Date(req.body.date) : undefined
+                });
+                res.status(201).json({ success: true, data: entry });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error creating emotion entry' });
+            }
+        }));
+        router.get('/api/v1/emotion/monthly', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                const data = yield this.EmotionEntries.getMonthlyEmotions(userId);
+                res.status(200).json({ success: true, data });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching monthly emotion data' });
+            }
+        }));
+        router.get('/api/v1/emotion/all', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
+            try {
+                // Optional: if no userId provided, return all entries
+                const data = userId
+                    ? yield this.EmotionEntries.getAllEmotionEntries(userId)
+                    : yield this.EmotionEntries.getAllEmotionEntries();
+                res.status(200).json({ success: true, data });
+            }
+            catch (e) {
+                console.error(e);
+                res.status(500).json({ success: false, message: 'Error fetching all emotion data' });
+            }
+        }));
+        // Get a specific emotion entry by ID
+        router.get('/api/v1/emotion/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userId = "113352457463047835007"; // Replace with auth later
+            try {
+                const entry = yield this.EmotionEntries.getEmotionEntry(req.params.id, userId);
+                if (!entry) {
+                    return res.status(404).json({ success: false, message: 'Emotion entry not found' });
+                }
+                res.status(200).json({ success: true, data: entry });
+            }
+            catch (e) {
+                console.error('Error fetching emotion entry:', e);
+                res.status(500).json({ success: false, message: 'Error fetching emotion entry' });
+            }
+        }));
+        // Update an emotion entry by ID
+        router.put('/api/v1/emotion/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userId = "113352457463047835007"; // Replace with auth later
+            const entryId = req.params.id;
+            try {
+                const updated = yield this.EmotionEntries.updateEmotionEntry(entryId, {
+                    moodScore: req.body.moodScore,
+                    feelings: req.body.feelings,
+                    people: req.body.people,
+                    place: req.body.place,
+                    date: req.body.date ? new Date(req.body.date) : new Date()
+                });
+                if (!updated) {
+                    return res.status(404).json({ success: false, message: 'Emotion entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Emotion entry updated successfully' });
+            }
+            catch (e) {
+                console.error('Error updating emotion entry:', e);
+                res.status(500).json({ success: false, message: 'Error updating emotion entry' });
+            }
+        }));
+        // Delete an emotion entry by ID
+        router.delete('/api/v1/emotion/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userId = "113352457463047835007"; // Replace with actual auth later
+            const entryId = req.params.id;
+            try {
+                const result = yield this.EmotionEntries.deleteEmotionEntry(entryId, userId);
+                if (!result || result.deletedCount === 0) {
+                    return res.status(404).json({ success: false, message: 'Emotion entry not found' });
+                }
+                res.status(200).json({ success: true, message: 'Emotion entry deleted successfully' });
+            }
+            catch (e) {
+                console.error('Error deleting emotion entry:', e);
+                res.status(500).json({ success: false, message: 'Error deleting emotion entry' });
+            }
+        }));
+        // Get Affirmations
+        router.get('/api/v1/affirmations', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // get userid from auth , for now hardcoded 1
+            const userId = "113352457463047835007";
             try {
                 const affirmations = yield this.AffirmationEntries.getAffirmations(userId);
                 res.status(200).json({ success: true, data: affirmations });

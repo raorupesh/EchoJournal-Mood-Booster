@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 const BASE_URL = 'http://localhost:8080';
 
 describe('Journal Entry API Tests', function () {
-    let testUserId = 1;
+    let testUserId = "113352457463047835007";
     let testEntryId;
 
     before(function (done) {
@@ -57,7 +57,7 @@ describe('Journal Entry API Tests', function () {
         it('Should have all expected properties with correct types', function () {
             expect(journalEntry).to.have.property('_id').that.is.a('string');
             expect(journalEntry).to.have.property('id').that.is.a('string');
-            expect(journalEntry).to.have.property('userId').that.is.a('number');
+            expect(journalEntry).to.have.property('userId').that.is.a('string');
             expect(journalEntry).to.have.property('content').that.is.a('string');
             expect(journalEntry).to.have.property('feelings').that.is.an('array');
             expect(journalEntry).to.have.property('date').that.is.a('string');

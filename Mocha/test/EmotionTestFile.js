@@ -6,7 +6,7 @@ chai.use(chaiHttp);
 const BASE_URL = 'http://localhost:8080';
 
 describe('Emotion Entry API Tests', function () {
-    let testUserId = 1;
+    let testUserId = "113352457463047835007";
     let testEmotionId;
 
     // Create a new emotion entry before tests
@@ -90,7 +90,7 @@ describe('Emotion Entry API Tests', function () {
         it('Should return 500 for missing required fields on creation', function (done) {
             chai.request(BASE_URL)
                 .post('/api/v1/emotion')
-                .send({ userId: 1 }) // missing moodScore, feelings, etc.
+                .send({ userId: testUserId }) // missing moodScore, feelings, etc.
                 .end(function (err, res) {
                     expect(res).to.have.status(500);
                     expect(res.body).to.have.property('success', false);

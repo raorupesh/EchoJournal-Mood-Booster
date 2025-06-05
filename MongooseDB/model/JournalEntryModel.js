@@ -97,6 +97,22 @@ class JournalEntryModel {
             return true;
         });
     }
+    getDailyJournalEntries(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Get start and end of the day
+            const startOfDay = new Date(date);
+            startOfDay.setHours(0, 0, 0, 0);
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+            return yield this.model.find({
+                userId,
+                date: {
+                    $gte: startOfDay,
+                    $lte: endOfDay
+                }
+            }).sort({ date: -1 }).exec();
+        });
+    }
 }
 exports.JournalEntryModel = JournalEntryModel;
 //# sourceMappingURL=JournalEntryModel.js.map

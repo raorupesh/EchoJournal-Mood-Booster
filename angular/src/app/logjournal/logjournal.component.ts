@@ -64,7 +64,6 @@ export class LogjournalComponent implements OnInit {
     } else {
         this.journalService.createJournalEntry(journalToSubmit).subscribe({
           next: (response) => {
-            console.log('Journal entry saved:', response);
             this.isSubmitting = false;
             this.successMessage = 'Journal entry saved successfully!';
             setTimeout(() => {

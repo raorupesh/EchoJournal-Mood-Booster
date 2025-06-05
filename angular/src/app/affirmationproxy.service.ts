@@ -15,7 +15,7 @@ export interface Affirmation {
 })
 
 export class AffirmationproxyService {
-  private apiUrl = 'http://localhost:8080/api/v1/affirmations/';
+  private apiUrl = 'http://localhost:8080/api/v2/affirmations/';
 
   constructor(private http: HttpClient) { }
   // Get all affirmations for the current user

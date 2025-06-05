@@ -33,7 +33,6 @@ export class MyaffirmationsComponent implements OnInit {
           );
         }
         this.loading = false;
-        console.log('Affirmations loaded:', this.affirmations);
       },
       error: (err) => {
         console.error('Error fetching affirmations:', err);

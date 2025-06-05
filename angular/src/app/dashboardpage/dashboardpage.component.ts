@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { RecentactivityComponent } from '../recentactivity/recentactivity.component';
 import { EmotiongraphComponent } from '../emotiongraph/emotiongraph.component';
+import { EmotionentryproxyService, DailySummary } from '../emotionentryproxy.service';
 
 @Component({
   selector: 'app-dashboardpage',
@@ -11,22 +12,48 @@ import { EmotiongraphComponent } from '../emotiongraph/emotiongraph.component';
   templateUrl: './dashboardpage.component.html',
   styleUrls: ['./dashboardpage.component.css']
 })
-export class DashboardpageComponent {
+export class DashboardpageComponent implements OnInit {
+  dailySummary: DailySummary | null = null;
+  isLoadingSummary = true;
+  summaryError = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private emotionService: EmotionentryproxyService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadDailySummary();
+  }
+
+  loadDailySummary(): void {
+    this.isLoadingSummary = true;
+    this.emotionService.getDailySummary().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.dailySummary = response.data;
+        } else {
+          this.summaryError = true;
+        }
+        this.isLoadingSummary = false;
+      },
+      error: (error) => {
+        console.error('Error loading daily summary:', error);
+        this.summaryError = true;
+        this.isLoadingSummary = false;
+      }
+    });
+  }
 
   openMoodEcho(): void {
-    console.log('Mood Echo clicked');
     this.router.navigate(['/moodecho/new']);
   }
 
   openLogJournal(): void {
-    console.log('Log Journal clicked');
     this.router.navigate(['/logjournal']);
   }
 
   openAffirmations(): void {
-    console.log('My Affirmations clicked');
     this.router.navigate(['/myaffirmations']);
   }
 }

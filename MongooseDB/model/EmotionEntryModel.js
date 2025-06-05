@@ -181,6 +181,36 @@ class EmotionEntryModel {
             }
         });
     }
+    getDailyEmotionEntries(userId, date) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // Get start and end of the day
+                const startOfDay = new Date(date);
+                startOfDay.setHours(0, 0, 0, 0);
+                const endOfDay = new Date(date);
+                endOfDay.setHours(23, 59, 59, 999);
+                const entries = yield this.model.find({
+                    userId,
+                    date: {
+                        $gte: startOfDay,
+                        $lte: endOfDay
+                    }
+                }).sort({ date: -1 }).exec();
+                return entries.map((entry) => ({
+                    id: entry.id,
+                    date: entry.date,
+                    moodScore: entry.moodScore,
+                    feelings: entry.feelings,
+                    people: entry.people,
+                    place: entry.place
+                }));
+            }
+            catch (e) {
+                console.error("Error fetching daily emotion entries:", e);
+                return [];
+            }
+        });
+    }
 }
 exports.EmotionEntryModel = EmotionEntryModel;
 //# sourceMappingURL=EmotionEntryModel.js.map

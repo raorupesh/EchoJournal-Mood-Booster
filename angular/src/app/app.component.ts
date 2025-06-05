@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthproxyService } from './authproxy.service';
 
@@ -12,7 +12,7 @@ import { AuthproxyService } from './authproxy.service';
 export class AppComponent implements OnInit {
   title = 'EchoJournal';
 
-  constructor(public authService: AuthproxyService) {}
+  constructor(public authService: AuthproxyService, private router: Router) {}
 
   ngOnInit() {
     // Check authentication status when component loads
@@ -22,11 +22,11 @@ export class AppComponent implements OnInit {
   login() {
     this.authService.login();
   }
-
   logout() {
     this.authService.logout().subscribe({
       next: () => {
         console.log('Logged out successfully');
+        this.router.navigate(['/welcome']);
       },
       error: (error) => {
         console.error('Logout failed:', error);

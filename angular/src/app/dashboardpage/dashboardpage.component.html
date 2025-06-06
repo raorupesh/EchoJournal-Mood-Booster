@@ -1,5 +1,28 @@
 <div class="container-fluid p-4">
-  
+
+  <!-- Login Required Modal -->
+  <div class="modal fade" [class.show]="showLoginModal" [style.display]="showLoginModal ? 'block' : 'none'"
+    tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login Required</h5>
+        </div>
+        <div class="modal-body text-center">
+          <p>Please log in to use EchoJournal and access your dashboard.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-primary" (click)="goToWelcome()">
+            Okay
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal backdrop -->
+  <div class="modal-backdrop fade" [class.show]="showLoginModal" *ngIf="showLoginModal"></div>
+
   <div class="row mb-2">
     <div class="col-md-8">
       <div class="card shadow-sm">
@@ -16,7 +39,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-md-4 mb-3">
       <button class="btn btn-success w-100 py-4" (click)="openMoodEcho()">
@@ -33,12 +56,13 @@
         <i class="bi bi-sun me-2"></i> My Affirmations
       </button>
     </div>
-  </div>    <div class="row mt-4">
+  </div>
+  <div class="row mt-4">
     <div class="col-12">
       <div class="card shadow-sm bg-light">
         <div class="card-body">
           <h5 class="card-title text-success">Today's Mood Summary</h5>
-          
+
           <!-- Loading state -->
           <div *ngIf="isLoadingSummary" class="mt-2">
             <div class="spinner-border spinner-border-sm text-success me-2" role="status">
@@ -46,41 +70,40 @@
             </div>
             <span>Loading today's summary...</span>
           </div>
-          
+
           <!-- Error state -->
           <div *ngIf="summaryError && !isLoadingSummary" class="alert alert-warning mt-2 mb-0">
             <i class="bi bi-exclamation-triangle me-2"></i>
             Unable to load today's summary. Please try again later.
           </div>
-          
+
           <!-- Summary content -->
           <div *ngIf="dailySummary && !isLoadingSummary && !summaryError" class="mt-2">
             <ng-container *ngIf="dailySummary.hasEntries; else noEntries">
               <p class="mb-2">
                 Your mood has been <strong>{{ dailySummary.moodDescription }}</strong> today
-                <span *ngIf="dailySummary.averageMoodScore > 0"> 
+                <span *ngIf="dailySummary.averageMoodScore > 0">
                   (average score: {{ dailySummary.averageMoodScore }}/10)
                 </span>.
-                You've logged {{ dailySummary.journalEntriesCount }} journal 
-                {{ dailySummary.journalEntriesCount === 1 ? 'entry' : 'entries' }} and 
-                {{ dailySummary.emotionEntriesCount }} emotion 
+                You've logged {{ dailySummary.journalEntriesCount }} journal
+                {{ dailySummary.journalEntriesCount === 1 ? 'entry' : 'entries' }} and
+                {{ dailySummary.emotionEntriesCount }} emotion
                 {{ dailySummary.emotionEntriesCount === 1 ? 'entry' : 'entries' }}.
               </p>
-              
+
               <div *ngIf="dailySummary.todaysFeelings.length > 0" class="mt-2">
                 <small class="text-muted">Today's feelings:</small>
                 <div class="mt-1">
-                  <span *ngFor="let feeling of dailySummary.todaysFeelings" 
-                        class="badge bg-secondary me-1 mb-1">
+                  <span *ngFor="let feeling of dailySummary.todaysFeelings" class="badge bg-secondary me-1 mb-1">
                     {{ feeling }}
                   </span>
                 </div>
               </div>
             </ng-container>
-            
+
             <ng-template #noEntries>
               <p class="mb-2 text-muted">
-                You haven't logged any mood or journal entries today yet. 
+                You haven't logged any mood or journal entries today yet.
                 Start tracking your emotions and thoughts to see your daily summary!
               </p>
             </ng-template>

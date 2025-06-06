@@ -24,11 +24,13 @@
             </div>
         </div>
     </div>
-
     <p class="mb-4">Start your journey to improved mental wellbeing today</p>
 
     <div class="mb-5">
-        <a href="/dashboard">
+        <button *ngIf="!(authService.authStatus$ | async)?.authenticated" (click)="login()" class="btn btn-primary">
+            Login with Google to Get Started
+        </button>
+        <a href="/dashboard" *ngIf="(authService.authStatus$ | async)?.authenticated">
             <button class="btn btn-primary">Get Started</button>
         </a>
     </div>

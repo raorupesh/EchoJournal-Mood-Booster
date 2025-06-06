@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { RecentactivityComponent } from '../recentactivity/recentactivity.component';
 import { EmotiongraphComponent } from '../emotiongraph/emotiongraph.component';
 import { EmotionentryproxyService, DailySummary } from '../emotionentryproxy.service';
+import { AuthproxyService } from '../authproxy.service';
 
 @Component({
   selector: 'app-dashboardpage',
@@ -16,14 +17,22 @@ export class DashboardpageComponent implements OnInit {
   dailySummary: DailySummary | null = null;
   isLoadingSummary = true;
   summaryError = false;
+  showLoginModal = false;
 
   constructor(
     private router: Router,
-    private emotionService: EmotionentryproxyService
-  ) {}
-
+    private emotionService: EmotionentryproxyService,
+    private authService: AuthproxyService
+  ) { }
   ngOnInit(): void {
-    this.loadDailySummary();
+    this.authService.authStatus$.subscribe(status => {
+      if (!status.authenticated) {
+        this.showLoginModal = true;
+      } else {
+        this.showLoginModal = false;
+        this.loadDailySummary();
+      }
+    });
   }
 
   loadDailySummary(): void {
@@ -52,8 +61,11 @@ export class DashboardpageComponent implements OnInit {
   openLogJournal(): void {
     this.router.navigate(['/logjournal']);
   }
-
   openAffirmations(): void {
     this.router.navigate(['/myaffirmations']);
+  }
+
+  goToWelcome(): void {
+    this.router.navigate(['/welcome']);
   }
 }

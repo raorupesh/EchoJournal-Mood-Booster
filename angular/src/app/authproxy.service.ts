@@ -18,7 +18,8 @@ export interface AuthStatus {
   providedIn: 'root'
 })
 export class AuthproxyService {
-  private apiUrl = 'http://localhost:8080/api/auth/';
+  //private apiUrl = 'http://localhost:8080/api/auth/';
+  private apiUrl = 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/api/auth/';
   private authStatusSubject = new BehaviorSubject<AuthStatus>({ authenticated: false });
   public authStatus$ = this.authStatusSubject.asObservable();
 
@@ -33,6 +34,7 @@ export class AuthproxyService {
 
   login(): void {
     window.location.href = 'http://localhost:8080/auth/google';
+    window.location.href = 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/auth/google';
   }
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}logout`, {}, { withCredentials: true }).pipe(

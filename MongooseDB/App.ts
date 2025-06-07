@@ -33,7 +33,8 @@ class App {
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     this.expressApp.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+      //res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+      res.header("Access-Control-Allow-Origin", "https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net");
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       res.header("Access-Control-Allow-Credentials", "true");
       res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -74,10 +75,12 @@ class App {
     router.get('/auth/google',
       passport.authenticate('google', { scope: ['profile'] })); router.get('/auth/google/callback',
         passport.authenticate('google',
-          { failureRedirect: 'http://localhost:4200' }
+//          { failureRedirect: 'http://localhost:4200' }
+            { failureRedirect: 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/' }
         ),
         (req, res) => {
-          res.redirect('http://localhost:4200/dashboard');
+          //res.redirect('http://localhost:4200/dashboard');
+          res.redirect('https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/');
         }
       );
 

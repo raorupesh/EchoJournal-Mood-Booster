@@ -15,7 +15,8 @@ export interface Affirmation {
 })
 
 export class AffirmationproxyService {
-  private apiUrl = 'http://localhost:8080/api/v2/affirmations/';
+  //private apiUrl = 'http://localhost:8080/api/v2/affirmations/';
+  private apiUrl = 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/api/v2/affirmations/';
 
   constructor(private http: HttpClient) { }
   // Get all affirmations for the current user

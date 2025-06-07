@@ -26,7 +26,8 @@ export interface DailySummary {
   providedIn: 'root'
 })
 export class EmotionentryproxyService {
-  private apiUrl = 'http://localhost:8080/api/v2/emotion/'; // This will be proxied to your MongoDB backend
+  //private apiUrl = 'http://localhost:8080/api/v2/emotion/'; // This will be proxied to your MongoDB backend
+  private apiUrl = 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/api/v2/emotion/';
 
   constructor(private http: HttpClient) { }
   createEmotionEntry(entry: EmotionEntry): Observable<{ success: boolean, data: EmotionEntry }> {
@@ -61,6 +62,7 @@ export class EmotionentryproxyService {
   }
 
   getDailySummary(): Observable<{ success: boolean, data: DailySummary }> {
-    return this.http.get<{ success: boolean, data: DailySummary }>('http://localhost:8080/api/v2/emotion/daily/summary', { withCredentials: true });
+    //return this.http.get<{ success: boolean, data: DailySummary }>('http://localhost:8080/api/v2/emotion/daily/summary', { withCredentials: true });
+    return this.http.get<{ success: boolean, data: DailySummary }>('https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/api/v2/emotion/daily/summary', { withCredentials: true });
   }
 }

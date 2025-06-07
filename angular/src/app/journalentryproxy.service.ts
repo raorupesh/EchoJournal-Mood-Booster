@@ -14,7 +14,8 @@ export interface JournalEntry {
   providedIn: 'root'
 })
 export class JournalentryproxyService {
-  private apiUrl = 'http://localhost:8080/api/v2/journal/'; // This will be proxied to your MongoDB backend
+  //private apiUrl = 'http://localhost:8080/api/v2/journal/'; // This will be proxied to your MongoDB backend
+  private apiUrl = 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net/api/v2/journal/'; // This will be proxied to your MongoDB backend
 
   constructor(private http: HttpClient) { }
   createJournalEntry(entry: JournalEntry): Observable<{ success: boolean, data: JournalEntry }> {

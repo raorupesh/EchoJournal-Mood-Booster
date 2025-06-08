@@ -1,29 +1,50 @@
 <div class="app-container">
-  <header class="app-header d-flex align-items-center justify-content-between p-3">
-    <div class="d-flex align-items-center">
-      <img src="EchoJournalLogo.png" alt="Echo Journal Logo" class="header-logo-img">
-    </div>
-    <div class="d-flex align-items-center">
-      <span class="header-logo">EJ</span>
-      <!-- Minimal Authentication Buttons -->
-      <div class="auth-buttons ms-3">
-        <button 
-          *ngIf="!(authService.authStatus$ | async)?.authenticated" 
-          (click)="login()" 
-          class="btn btn-primary btn-sm">
-          Login with Google
-        </button>
-        <div *ngIf="(authService.authStatus$ | async)?.authenticated" class="d-flex align-items-center">
-          <span class="me-2">Welcome, {{ (authService.authStatus$ | async)?.user?.displayName }}!</span>
-          <button 
-            (click)="logout()" 
-            class="btn btn-outline-secondary btn-sm">
-            Logout
-          </button>
+  <nav class="navbar navbar-expand-lg app-header">
+    <div class="container-fluid">
+      <!-- Brand and Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="EchoJournalLogo.png" alt="Echo Journal Logo" class="header-logo-img me-2">
+      </a>
+
+      <!-- Mobile Toggle Button -->
+      <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-bs-toggle="collapse" 
+        data-bs-target="#navbarNav" 
+        aria-controls="navbarNav" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible Content -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav ms-auto">
+          <!-- Authentication Section -->
+          <div class="auth-buttons d-flex flex-column flex-lg-row align-items-lg-center">
+            <button 
+              *ngIf="!(authService.authStatus$ | async)?.authenticated" 
+              (click)="login()" 
+              class="btn btn-primary btn-sm mb-2 mb-lg-0">
+              Login with Google
+            </button>
+            <div *ngIf="(authService.authStatus$ | async)?.authenticated" 
+                 class="d-flex flex-column flex-lg-row align-items-lg-center">
+              <span class="navbar-text me-lg-2 mb-2 mb-lg-0 text-center">
+                Welcome, {{ (authService.authStatus$ | async)?.user?.displayName }}!
+              </span>
+              <button 
+                (click)="logout()" 
+                class="btn btn-outline-secondary btn-sm">
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </header>
+  </nav>
   <main class="app-content">
     <router-outlet></router-outlet>
   </main>

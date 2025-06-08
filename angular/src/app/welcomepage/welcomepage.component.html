@@ -1,32 +1,32 @@
 <div class="container d-flex flex-column justify-content-center align-items-center text-center p-4">
-    <header class="mb-5">
+    <header class="mb-5 fade-in-up" style="animation-delay: 0.1s;">
         <h1 class="display-4">Welcome to EchoJournal</h1>
         <p class="lead">Your AI-powered journaling companion for better mental wellbeing</p>
     </header>
 
     <div class="row mb-5">
         <div class="col-md-4 mb-3">
-            <div class="p-3 border rounded">
+            <div class="p-3 border rounded feature-card fade-in-up" style="animation-delay: 0.2s;">
                 <h3>Daily Journal</h3>
                 <p>Record your thoughts and feelings in a safe, personal space</p>
             </div>
         </div>
         <div class="col-md-4 mb-3">
-            <div class="p-3 border rounded">
+            <div class="p-3 border rounded feature-card fade-in-up" style="animation-delay: 0.3s;">
                 <h3>Mood Tracking</h3>
                 <p>Visualize your emotional patterns and track your progress</p>
             </div>
         </div>
         <div class="col-md-4 mb-3">
-            <div class="p-3 border rounded">
+            <div class="p-3 border rounded feature-card fade-in-up" style="animation-delay: 0.4s;">
                 <h3>AI Insights</h3>
                 <p>Receive personalized encouragement and positive reminders</p>
             </div>
         </div>
     </div>
-    <p class="mb-4">Start your journey to improved mental wellbeing today</p>
+    <p class="mb-4 fade-in-up" style="animation-delay: 0.5s;">Start your journey to improved mental wellbeing today</p>
 
-    <div class="mb-5">
+    <div class="mb-5 fade-in-up" style="animation-delay: 0.6s;">
         <button *ngIf="!(authService.authStatus$ | async)?.authenticated" (click)="login()" class="btn btn-primary">
             Login with Google to Get Started
         </button>

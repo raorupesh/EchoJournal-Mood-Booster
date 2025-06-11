@@ -6,158 +6,176 @@ db.createCollection('emotionentries')
 emotionCollection = db.getCollection("emotionentries")
 emotionCollection.remove({})
 
-// Insert sample emotion entries for the past week (June 2-8, 2025)
+// Sample emotion entries for the past week (June 4-10, 2025)
+// User ID: 105181080591378910223
+
+// June 4, 2025 - Tuesday
 emotionCollection.insert({
     id: "e001f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-02T08:00:00Z"),
-    feelings: ["motivated", "focused"],
-    people: ["coworkers", "team"],
-    place: ["office", "meeting room"],
+    userId: "105181080591378910223",
+    date: new Date("2025-06-04T09:00:00Z"),
+    feelings: ["excited", "motivated"],
+    people: ["colleagues", "manager"],
+    place: ["office", "conference room"],
     moodScore: 8,
-    createdAt: new Date("2025-06-02T08:00:00Z")
+    createdAt: new Date("2025-06-04T09:00:00Z")
 })
 
+// June 4, 2025 - Evening
 emotionCollection.insert({
     id: "e002f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-03T19:30:00Z"),
-    feelings: ["accomplished", "satisfied"],
-    people: ["colleagues", "family"],
-    place: ["office", "restaurant"],
-    moodScore: 9,
-    createdAt: new Date("2025-06-03T19:30:00Z")
+    userId: "105181080591378910223",
+    date: new Date("2025-06-04T19:30:00Z"),
+    feelings: ["relaxed", "content"],
+    people: ["family"],
+    place: ["home"],
+    moodScore: 7,
+    createdAt: new Date("2025-06-04T19:30:00Z")
 })
 
+// June 5, 2025 - Wednesday
 emotionCollection.insert({
     id: "e003f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-04T15:00:00Z"),
-    feelings: ["stressed", "resilient"],
-    people: ["client", "team"],
-    place: ["conference room", "office"],
-    moodScore: 6,
-    createdAt: new Date("2025-06-04T15:00:00Z")
+    userId: "105181080591378910223",
+    date: new Date("2025-06-05T08:15:00Z"),
+    feelings: ["energized", "focused"],
+    people: ["workout buddy"],
+    place: ["gym"],
+    moodScore: 8,
+    createdAt: new Date("2025-06-05T08:15:00Z")
 })
 
+// June 5, 2025 - Afternoon
 emotionCollection.insert({
     id: "e004f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-05T12:15:00Z"),
-    feelings: ["joyful", "grateful"],
-    people: ["friends", "hobby group"],
-    place: ["cafe", "home"],
-    moodScore: 9,
-    createdAt: new Date("2025-06-05T12:15:00Z")
+    userId: "105181080591378910223",
+    date: new Date("2025-06-05T14:45:00Z"),
+    feelings: ["stressed", "determined"],
+    people: ["team members"],
+    place: ["office"],
+    moodScore: 6,
+    createdAt: new Date("2025-06-05T14:45:00Z")
 })
 
+// June 6, 2025 - Thursday
 emotionCollection.insert({
     id: "e005f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-06T17:45:00Z"),
-    feelings: ["excited", "hopeful"],
-    people: ["boss", "mentor"],
-    place: ["office", "corporate building"],
+    userId: "105181080591378910223",
+    date: new Date("2025-06-06T12:30:00Z"),
+    feelings: ["inspired", "creative"],
+    people: ["design team"],
+    place: ["creative studio"],
     moodScore: 9,
-    createdAt: new Date("2025-06-06T17:45:00Z")
+    createdAt: new Date("2025-06-06T12:30:00Z")
 })
 
+// June 6, 2025 - Evening
 emotionCollection.insert({
     id: "e006f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-07T13:30:00Z"),
-    feelings: ["peaceful", "content"],
-    people: ["hiking partner", "nature"],
-    place: ["hiking trail", "home"],
+    userId: "105181080591378910223",
+    date: new Date("2025-06-06T20:00:00Z"),
+    feelings: ["happy", "social"],
+    people: ["friends"],
+    place: ["restaurant", "bar"],
     moodScore: 8,
-    createdAt: new Date("2025-06-07T13:30:00Z")
+    createdAt: new Date("2025-06-06T20:00:00Z")
 })
 
+// June 7, 2025 - Friday
 emotionCollection.insert({
     id: "e007f2345a6789b0c1d2e3f4",
-    userId: "113352457463047835007",
-    date: new Date("2025-06-08T09:20:00Z"),
-    feelings: ["reflective", "optimistic"],
-    people: ["myself", "family"],
-    place: ["home", "garden"],
-    moodScore: 8,
-    createdAt: new Date("2025-06-08T09:20:00Z")
+    userId: "105181080591378910223",
+    date: new Date("2025-06-07T10:00:00Z"),
+    feelings: ["accomplished", "proud"],
+    people: ["boss", "clients"],
+    place: ["meeting room"],
+    moodScore: 9,
+    createdAt: new Date("2025-06-07T10:00:00Z")
 })
 
-// Insert sample emotion entries for second user (105181080591378910223) - past week
+// June 7, 2025 - Evening
 emotionCollection.insert({
     id: "e008f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-02T07:00:00Z"),
-    feelings: ["centered", "prepared"],
-    people: ["yoga instructor", "myself"],
-    place: ["yoga studio", "home"],
-    moodScore: 7,
-    createdAt: new Date("2025-06-02T07:00:00Z")
+    date: new Date("2025-06-07T18:30:00Z"),
+    feelings: ["relieved", "celebratory"],
+    people: ["work team"],
+    place: ["pub"],
+    moodScore: 8,
+    createdAt: new Date("2025-06-07T18:30:00Z")
 })
 
+// June 8, 2025 - Saturday
 emotionCollection.insert({
     id: "e009f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-03T18:30:00Z"),
-    feelings: ["inspired", "creative"],
-    people: ["art mentor", "fellow artists"],
-    place: ["art studio", "gallery"],
-    moodScore: 9,
-    createdAt: new Date("2025-06-03T18:30:00Z")
+    date: new Date("2025-06-08T11:00:00Z"),
+    feelings: ["peaceful", "refreshed"],
+    people: ["partner"],
+    place: ["park", "nature trail"],
+    moodScore: 8,
+    createdAt: new Date("2025-06-08T11:00:00Z")
 })
 
+// June 8, 2025 - Afternoon
 emotionCollection.insert({
     id: "e010f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-04T20:45:00Z"),
-    feelings: ["proud", "relieved"],
-    people: ["roommate", "myself"],
-    place: ["apartment", "living room"],
+    date: new Date("2025-06-08T16:20:00Z"),
+    feelings: ["curious", "engaged"],
+    people: ["myself"],
+    place: ["bookstore", "coffee shop"],
     moodScore: 7,
-    createdAt: new Date("2025-06-04T20:45:00Z")
+    createdAt: new Date("2025-06-08T16:20:00Z")
 })
 
+// June 9, 2025 - Sunday
 emotionCollection.insert({
     id: "e011f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-05T15:30:00Z"),
-    feelings: ["peaceful", "connected"],
-    people: ["dog", "nature"],
-    place: ["hiking trail", "forest"],
-    moodScore: 8,
-    createdAt: new Date("2025-06-05T15:30:00Z")
+    date: new Date("2025-06-09T10:30:00Z"),
+    feelings: ["grateful", "warm"],
+    people: ["family", "grandparents"],
+    place: ["family home"],
+    moodScore: 9,
+    createdAt: new Date("2025-06-09T10:30:00Z")
 })
 
+// June 9, 2025 - Evening
 emotionCollection.insert({
     id: "e012f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-06T21:45:00Z"),
-    feelings: ["joyful", "social"],
-    people: ["close friends", "game group"],
-    place: ["friend's house", "living room"],
-    moodScore: 9,
-    createdAt: new Date("2025-06-06T21:45:00Z")
+    date: new Date("2025-06-09T21:00:00Z"),
+    feelings: ["nostalgic", "content"],
+    people: ["old friends"],
+    place: ["home"],
+    moodScore: 7,
+    createdAt: new Date("2025-06-09T21:00:00Z")
 })
 
+// June 10, 2025 - Monday (Today)
 emotionCollection.insert({
     id: "e013f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-07T10:15:00Z"),
-    feelings: ["satisfied", "grounded"],
-    people: ["farmers", "neighbors"],
-    place: ["farmers market", "kitchen"],
+    date: new Date("2025-06-10T08:45:00Z"),
+    feelings: ["optimistic", "ready"],
+    people: ["colleagues"],
+    place: ["office"],
     moodScore: 8,
-    createdAt: new Date("2025-06-07T10:15:00Z")
+    createdAt: new Date("2025-06-10T08:45:00Z")
 })
 
+// June 10, 2025 - Lunch break
 emotionCollection.insert({
     id: "e014f2345a6789b0c1d2e3f4",
     userId: "105181080591378910223",
-    date: new Date("2025-06-08T14:30:00Z"),
-    feelings: ["grateful", "calm"],
-    people: ["myself", "book characters"],
-    place: ["reading nook", "bedroom"],
-    moodScore: 8,
-    createdAt: new Date("2025-06-08T14:30:00Z")
+    date: new Date("2025-06-10T12:15:00Z"),
+    feelings: ["balanced", "mindful"],
+    people: ["lunch companion"],
+    place: ["outdoor cafe"],
+    moodScore: 7,
+    createdAt: new Date("2025-06-10T12:15:00Z")
 })
+
+// Verify the data has been inserted
+print("Inserted " + emotionCollection.count() + " emotion entry records for the past week")

@@ -18,7 +18,8 @@ export interface AuthStatus {
   providedIn: 'root'
 })
 export class AuthproxyService {
-  private apiUrl = 'http://localhost:8080/api/auth/';
+  // this will be azure URL as we expose this in express server
+  private apiUrl = '/api/auth/';
   private authStatusSubject = new BehaviorSubject<AuthStatus>({ authenticated: false });
   public authStatus$ = this.authStatusSubject.asObservable();
 
@@ -32,7 +33,7 @@ export class AuthproxyService {
   }
 
   login(): void {
-    window.location.href = 'http://localhost:8080/auth/google';
+    window.location.href = '/auth/google';
   }
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}logout`, {}, { withCredentials: true }).pipe(

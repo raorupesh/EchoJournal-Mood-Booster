@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'https://echojournal-crgagzdufjfqgwbf.westus-01.azurewebsites.net';
 
 describe('Emotion Entry API Tests', function () {
     let testUserId = "113352457463047835007";

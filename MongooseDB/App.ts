@@ -33,7 +33,7 @@ class App {
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(bodyParser.urlencoded({ extended: false }));
     this.expressApp.use((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+      res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       res.header("Access-Control-Allow-Credentials", "true");
       res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -424,7 +424,7 @@ class App {
     router.post('/api/v1/journal', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const entry = await this.JournalEntries.createJournalEntry({
@@ -447,7 +447,7 @@ class App {
     router.get('/api/v1/journal/recent', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const entries = await this.JournalEntries.getRecentJournalEntries(userId);
@@ -461,7 +461,7 @@ class App {
     router.get('/api/v1/journal/all', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const page = parseInt(req.query.page as string) || 1;
@@ -477,7 +477,7 @@ class App {
     router.get('/api/v1/journal/:id', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const entry = await this.JournalEntries.getJournalEntry(req.params.id, userId);
@@ -494,7 +494,7 @@ class App {
     // Update journal entry
     router.put('/api/v1/journal/:id', async (req, res) => {
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const updatedEntry = await this.JournalEntries.updateJournalEntry(req.params.id, {
@@ -517,7 +517,7 @@ class App {
     // Add DELETE endpoint for journal entries
     router.delete('/api/v1/journal/:id', async (req, res) => {
       // get userid from auth, for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const result = await this.JournalEntries.deleteJournalEntry(req.params.id);
@@ -534,7 +534,7 @@ class App {
     // Emotion Entry routes
     router.post('/api/v1/emotion', async (req, res) => {
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const entry = await this.EmotionEntries.createEmotionEntry({
@@ -555,7 +555,7 @@ class App {
     router.get('/api/v1/emotion/monthly', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const data = await this.EmotionEntries.getMonthlyEmotions(userId);
@@ -569,7 +569,7 @@ class App {
     router.get('/api/v1/emotion/all', async (req, res) => {
 
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         // Optional: if no userId provided, return all entries
@@ -585,7 +585,7 @@ class App {
 
     // Get a specific emotion entry by ID
     router.get('/api/v1/emotion/:id', async (req, res) => {
-      const userId = "113352457463047835007"; // Replace with auth later
+      const userId = "105181080591378910223"; // Replace with auth later
     
       try {
         const entry = await this.EmotionEntries.getEmotionEntry(req.params.id, userId);
@@ -601,7 +601,7 @@ class App {
 
     // Update an emotion entry by ID
     router.put('/api/v1/emotion/:id', async (req, res) => {
-      const userId = "113352457463047835007"; // Replace with auth later
+      const userId = "105181080591378910223"; // Replace with auth later
       const entryId = req.params.id;
     
       try {
@@ -626,7 +626,7 @@ class App {
 
     // Delete an emotion entry by ID
     router.delete('/api/v1/emotion/:id', async (req, res) => {
-      const userId = "113352457463047835007"; // Replace with actual auth later
+      const userId = "105181080591378910223"; // Replace with actual auth later
       const entryId = req.params.id;
     
       try {
@@ -647,7 +647,7 @@ class App {
 
     router.get('/api/v1/affirmations', async (req, res) => {
       // get userid from auth , for now hardcoded 1
-      const userId = "113352457463047835007";
+      const userId = "105181080591378910223";
 
       try {
         const affirmations = await this.AffirmationEntries.getAffirmations(userId);

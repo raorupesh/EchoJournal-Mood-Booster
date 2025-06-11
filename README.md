@@ -32,6 +32,8 @@ EchoJournal is a SaaS (Software as a Service) web application designed to help u
 - **Other:**  
   - JavaScript (ES6+)  
   - RESTful API design  
+  - Google SSO (for authentication)  
+  - Azure (for deployment)  
   - VS Code recommended for development
 
 ---
@@ -45,6 +47,9 @@ EchoJournal-Mood-Booster/
 │   ├── src/                  # Angular source code
 │   ├── angular.json          # Angular config
 │   └── ...                   # Other Angular files
+│
+├── Azure/                    # Azure deployment configuration
+│   └── ...                   # Azure deployment files
 │
 ├── MongooseDB/
 │   ├── App.js                # Main Express app and API routes
@@ -110,6 +115,43 @@ cd ../Mocha
 runTestFile.cmd
 ```
 > This will execute all Mocha/Chai test cases in `test/AppTestFile.js`.
+
+---
+
+## 🚀 Azure Deployment
+
+### Prerequisites
+- Azure account with appropriate subscription
+- Azure CLI installed and configured
+
+### Deployment Steps
+
+1. **Build Angular for Production**
+```sh
+cd angular
+ng build
+```
+> This creates optimized files in the `dist/` folder.
+
+2. **Copy Angular Build to Azure Directory**
+```sh
+cp -r dist/echo-journal/browser/* ../Azure/dist
+```
+or use file explorer in your system.
+
+3. **Update API URLs**
+- Update all API endpoint URLs in your Angular services to match your Azure deployment URLs
+- Update MongoDB connection strings in `MongooseDB/App.js` to point to your Azure MongoDB instance
+
+> **Note:** most of them could just be / because they are in the same endpoint.
+
+4. **Configure Express Server for Azure**
+- Ensure your Express server is configured for Azure hosting
+- Update CORS settings and port configurations as needed for Azure App Service
+
+5. **Deploy to Azure**
+
+> **Note:** Make sure to configure your MongoDB connection and update all environment-specific URLs before deployment.
 
 ---
 

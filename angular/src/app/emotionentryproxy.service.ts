@@ -26,7 +26,8 @@ export interface DailySummary {
   providedIn: 'root'
 })
 export class EmotionentryproxyService {
-  private apiUrl = 'http://localhost:8080/api/v2/emotion/'; // This will be proxied to your MongoDB backend
+  // this will be azure URL as we expose this in express server
+  private apiUrl = '/api/v2/emotion/'; // This will be proxied to your MongoDB backend
 
   constructor(private http: HttpClient) { }
   createEmotionEntry(entry: EmotionEntry): Observable<{ success: boolean, data: EmotionEntry }> {
@@ -61,6 +62,6 @@ export class EmotionentryproxyService {
   }
 
   getDailySummary(): Observable<{ success: boolean, data: DailySummary }> {
-    return this.http.get<{ success: boolean, data: DailySummary }>('http://localhost:8080/api/v2/emotion/daily/summary', { withCredentials: true });
+    return this.http.get<{ success: boolean, data: DailySummary }>('/api/v2/emotion/daily/summary', { withCredentials: true });
   }
 }

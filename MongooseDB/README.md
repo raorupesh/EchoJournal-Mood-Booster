@@ -17,11 +17,14 @@ To execute the server db and then the node server with the following commands:
 
 //populate the DB server with sample data
 2. startdbClient.EchoJournal.cmd
->load ('createDB/createEmotionEntrySampleData.js');
->load ('createDB/createJournalEntrySampleData.js');
->load ('createDB/createAffirmationSampleData.js');
->load ('createDB/createAdminUser.js');
->exit
+load ('createDB/createEmotionEntrySampleData.js');
+load ('createDB/createJournalEntrySampleData.js');
+load ('createDB/createAffirmationSampleData.js');
+load ('createDB/createSadEmotionEntrySampleData.js');
+load ('createDB/createSadJournalEntrySampleData.js');
+load ('createDB/createSadAffirmationSampleData.js');
+load ('createDB/createAdminUser.js');
+exit
 
 //install npm packages
 3. npm install

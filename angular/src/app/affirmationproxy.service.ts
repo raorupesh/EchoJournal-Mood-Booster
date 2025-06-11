@@ -15,7 +15,8 @@ export interface Affirmation {
 })
 
 export class AffirmationproxyService {
-  private apiUrl = 'http://localhost:8080/api/v2/affirmations/';
+  // this will be azure URL as we expose this in express server
+  private apiUrl = '/api/v2/affirmations/';
 
   constructor(private http: HttpClient) { }
   // Get all affirmations for the current user
